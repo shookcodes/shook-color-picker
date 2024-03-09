@@ -13,12 +13,14 @@ import { Icon } from 'astro-icon/components'
 			<li class="settings-dropdown-li">Display CMYK</li>
 		</ol>
 	</div>
-	<div id="color-picker-canvas-wrapper">
+	<div id="canvas-wrapper w-full h-full" class="relative">
+		<div id="color-marker"></div>
+
 		<div id="tooltip-color">
 			<span id="tooltip-color-preview"></span><span id="tooltip-color-text"></span>
 		</div>
-		<div id="color-marker"></div>
-		<canvas id="color-picker-canvas"></canvas>
+
+		<canvas id="color-picker-canvas" width="200" height="200"></canvas>
 	</div>
 	<input type="range" id="color-range" min="0" max="360" aria-label="hue" />
 	<div class="color-inputs w-full max-w-[180px]">
@@ -81,7 +83,7 @@ import { Icon } from 'astro-icon/components'
 			super()
 
 			const canvas: HTMLCanvasElement = this.querySelector('#color-picker-canvas')!
-
+			const wrapper: HTMLCanvasElement = this.querySelector('#canvas-wrapper')!
 			const ctx: CanvasRenderingContext2D = canvas.getContext('2d')!
 			const range: HTMLInputElement = this.querySelector('#color-range')!
 			const tooltip: HTMLDivElement = this.querySelector('#tooltip-color')!
@@ -92,10 +94,6 @@ import { Icon } from 'astro-icon/components'
 			const settingsDropdown: HTMLOListElement = this.querySelector('#settings-dropdown')
 
 			const marker: HTMLDivElement = this.querySelector('#color-marker')!
-
-			const wrapperRect = this.getBoundingClientRect()
-
-			const rect = canvas.getBoundingClientRect()
 
 			const colorInputs = this.querySelectorAll('.color-input')
 
@@ -117,30 +115,40 @@ import { Icon } from 'astro-icon/components'
 				setCanvasGradient(canvas, hex)
 			}
 
-			const updateTooltipPosition = (e: MouseEvent, tooltip: HTMLDivElement) => {
-				const top = rect.top + wrapperRect.top
-				const left = wrapperRect.left - rect.left
+			const getCursorPoint = (x, y) => {
+				if (!x || !y) return
+				const bounds = canvas.getBoundingClientRect()
 
+				const left = bounds.left >= 0 ? x - bounds.left - 4 : x + bounds.left * -1 - 4
+
+				const top = bounds.top >= 0 ? y - bounds.top - 4 : bounds.bottom + y - 4
+
+				return { left, top }
+			}
+
+			const updateTooltipPosition = (e: MouseEvent, tooltip: HTMLDivElement) => {
+				if (!e || !tooltip) return
 				const x = e.clientX
 				const y = e.clientY
-				const canvasX = x - rect.left + 16
-				const canvasY = y - rect.top + 16
 
-				// console.log('Y', y, 'TOP', top, 'TOP CAN', rect.top, 'WR TOP', wrapperRect.top)
-				const { hex } = getColorAtPosition(ctx, canvasX, canvasY)
+				const { top, left } = getCursorPoint(x, y)
+
+				if (!top || !left) return
+				const { hex } = getColorAtPosition(ctx, top, left)
 
 				// Set the tooltip position
-				tooltip.style.left = `${x + 10}px`
-				tooltip.style.top = `${y}px`
-
-				const style = getComputedStyle(this)
-
-				const paddingTop = style.paddingTop
+				tooltip.style.left = `${left + 10}px`
+				tooltip.style.top = `${top}px`
 
 				tooltipText.innerText = hex
-				// Show the tooltip
+
 				tooltip.style.display = 'flex'
 				tooltipColor.style.background = hex
+
+				// marker.style.opacity = '1'
+				// marker.style.display = 'block'
+				// marker.style.left = left + 'px'
+				// marker.style.top = top + 'px'
 			}
 
 			const handleTooltipVisibility = (e: MouseEvent, tooltip: HTMLDivElement) => {
@@ -153,17 +161,18 @@ import { Icon } from 'astro-icon/components'
 
 			const handleCanvasClick = (e: MouseEvent) => {
 				const hex = tooltipText.innerText
-				const top = wrapperRect.top + rect.top
-				const left = wrapperRect.left + rect.left
 
 				const x = e.clientX
 				const y = e.clientY
-				const canvasX = x - rect.left
-				const canvasY = y - rect.top
+
+				const { left, top } = getCursorPoint(x, y)
+
+				if (!top || !left) return
 
 				marker.style.display = 'block'
-				marker.style.left = x - 4 + 'px'
-				marker.style.top = y - 4 + 'px'
+
+				marker.style.left = left + 'px'
+				marker.style.top = top + 'px'
 
 				updateInputValues(colorInputs, hex)
 			}
@@ -182,15 +191,13 @@ import { Icon } from 'astro-icon/components'
 
 			const toggleSettingsDropdown = () => {
 				if (settingsDropdown.classList.contains('opacity-0')) {
-					// settingsDropdown.classList.add('scale-x-0', 'opacity-1')
 					settingsDropdown.style.zIndex = '5'
 
 					return setTimeout(() => {
 						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
 					}, 200)
 				} else {
-					// settingsDropdown.classList.remove('scale-x-0', 'opacity-1')
-					settingsDropdown.classList.add('opacity-0', 'pointer-events-none', 'scale-x-90')
+					settingsDropdown.classList.add('opacity-0', 'pointer-events-none')
 
 					setTimeout(() => {
 						settingsDropdown.style.zIndex = '-1'
@@ -226,8 +233,8 @@ import { Icon } from 'astro-icon/components'
 	#color-picker-canvas {
 		border: 1px solid #ccc;
 		border-radius: 0.5rem;
-		width: 200px;
-		height: 200px;
+		// width: 200px;
+		// height: 200px;
 	}
 
 	#color-range {
@@ -237,6 +244,7 @@ import { Icon } from 'astro-icon/components'
 		width: 100%; /* Full-width */
 		height: 0.5rem; /* Specified height */
 		border-radius: 2rem;
+		margin: 0.5rem 0;
 		background: linear-gradient(
 			90deg,
 			#ff0000,
@@ -300,9 +308,11 @@ import { Icon } from 'astro-icon/components'
 
 	#tooltip-color {
 		position: absolute;
-		display: none;
+		// top: 0;
+		// left: 0;
+		opacity: 0;
+		margin: 0;
 		background-color: #333;
-		color: #fff;
 		padding: 0.25rem 0.5rem;
 		border-radius: 5px;
 		width: max-content;
@@ -310,7 +320,10 @@ import { Icon } from 'astro-icon/components'
 		gap: 0.5rem;
 		transition: opacity 0.2s ease-in-out;
 		z-index: 3;
-		& span {
+		user-select: none;
+
+		& #tooltip-color-text {
+			user-select: none;
 			@apply text-neutral-100;
 		}
 	}
@@ -321,6 +334,8 @@ import { Icon } from 'astro-icon/components'
 		display: none;
 		width: 8px;
 		height: 8px;
+		top: 0;
+		left: 0;
 		border-radius: 100%;
 		background: #000000;
 	}
@@ -329,7 +344,6 @@ import { Icon } from 'astro-icon/components'
 		width: 1rem;
 		height: 1rem;
 		border-radius: 4px;
-		// aspect-ratio: square;
 		border: 1px solid #c7c7c7;
 	}
 

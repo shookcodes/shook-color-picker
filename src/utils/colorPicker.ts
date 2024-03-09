@@ -33,6 +33,7 @@ const setCanvasGradient = (canvas: HTMLCanvasElement, hex: string) => {
 
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+	console.log('W', canvas.width, canvas.height)
 	// Update white -> color -> black gradient on canvas
 	const brightnessGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
 	brightnessGradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
@@ -57,6 +58,7 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
+	console.log('H', currentHex)
 	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorModels
 	return { hex, rgb, hsl, cmyk }
 }
@@ -68,7 +70,6 @@ const updateInputValues = (inputs: HTMLInputElement[], hex: string) => {
 		if (!type) return
 
 		if (type && type in colorValues) {
-			console.log('Type:', { [type]: colorValues[type] })
 			input.value = colorValues[type]
 		}
 	})
