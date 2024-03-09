@@ -158,6 +158,8 @@ const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void =
 	hue = typeof hue === 'string' ? parseInt(hue) : hue
 
 	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex)
+
+	console.log('HUEEEE', hue)
 	hex = hex ? hex : hslToHex(hue, 100, 50)
 
 	const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)

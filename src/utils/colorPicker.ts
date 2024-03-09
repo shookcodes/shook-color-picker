@@ -3,51 +3,42 @@ import type { ColorModels, CanvasProps } from '../types'
 import { updateColorValues } from './convertColor'
 
 // Draw the canvas then set the canvas colors
-const drawCanvas = ({ width, canvas, height, hex, zoom }: CanvasProps) => {
+const drawCanvas = ({ width, canvas, height, hue, zoom }: CanvasProps) => {
 	canvas.width = width
 	canvas.height = height
 
-	const { ctx } = setCanvasGradient({ canvas, width, height, currentHex: hex, zoom })
+	const ctx = setCanvasGradient({ canvas, width, height, hue, zoom })
 
 	return ctx
 }
 
-const setCanvasGradient = ({
-	canvas,
-	width,
-	height,
-	currentHex = '#ffffff',
-	zoom
-}: CanvasProps) => {
+const setCanvasGradient = ({ canvas, width, height, hue, zoom }: CanvasProps) => {
 	if (zoom) {
 		width = width * zoom
 		height = height * zoom
 	}
 	const ctx = canvas.getContext('2d')!
-	ctx.imageSmoothingEnabled = false
+	ctx.imageSmoothingEnabled = true
 
-	// Update canvas color based on the hex param
-	const colorGradient = ctx.createLinearGradient(0, 0, width, 0)
-	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorModels
+	// Update canvas color gradient based on the hue param
+	const colorGradient = ctx.createLinearGradient(width * 0.04, height * 0.8, width, height)
 
-	console.log('HS', hex, rgb, hsl, cmyk)
-	colorGradient.addColorStop(0, hex)
-	colorGradient.addColorStop(1, hex)
+	colorGradient.addColorStop(0, `hsla(0, 0%, 100%, 1)`)
+	colorGradient.addColorStop(1, `hsla(${hue}, 100%, 50%, 0.9)`)
+
 	ctx.fillStyle = colorGradient
-
 	ctx.fillRect(0, 0, width, height)
 
-	// Update white -> color -> black gradient on canvas
-	const brightnessGradient = ctx.createLinearGradient(0, 0, 0, height)
-	brightnessGradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
-	brightnessGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)')
-	brightnessGradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)')
-	brightnessGradient.addColorStop(1, 'rgba(0, 0, 0, 1)')
+	// White to black gradient overlay
+	const lightGradient = ctx.createLinearGradient(0.2, 0.2, 0, height * 0.95)
 
-	ctx.fillStyle = brightnessGradient
+	lightGradient.addColorStop(0.05, `hsla(0, 0%, 100%, 1)`)
+	lightGradient.addColorStop(1, `hsla(0, 0%, 0%, 1)`)
+
+	ctx.globalCompositeOperation = 'multiply'
+	ctx.fillStyle = lightGradient
 	ctx.fillRect(0, 0, width, height)
-
-	return { ctx }
+	return ctx
 }
 
 const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
