@@ -2,21 +2,28 @@ function _scrubHex(hex: string) {
 	if (hex.charAt(0) === '#') {
 		return (hex = hex.slice(1))
 	}
+	return hex
 }
 
-const hexToRgb = (value: string) => {
-	const data = {}
-	let hex
+const hexToRgb = (hex: string): string => {
+	// const rgb = { r: 0, g: 0, b: 0 }
 
-	// remove # from hex value
-	const scrubbedHex = _scrubHex(value)
+	// // remove # from hex value
+	// const scrubHex = _scrubHex(value)
 
-	hex = '0x' + scrubbedHex
-	data.r = (hex >> 16) & 0xff
-	data.g = (hex >> 8) & 0xff
-	data.b = hex & 0xff
+	hex = '0x' + _scrubHex(hex)
+	// rgb.r = (hex >> 16) & 0xff
+	// rgb.g = (hex >> 8) & 0xff
+	// rgb.b = hex & 0xff
 
-	return `rgb(${Math.round(data.r)}, ${Math.round(data.g)}, ${Math.round(data.b)})`
+	const bigint = parseInt(hex, 16)
+	// const rgb: { r: number; g: number; b: number } = {
+	const r = (bigint >> 16) & 0xff
+	const g = (bigint >> 8) & 0xff
+	const b = bigint & 0xff
+	//   };
+
+	return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
 }
 
 const hexToHsl = (hex: string) => {
@@ -94,7 +101,7 @@ const hslToRgb = (h: number, s: number, l: number) => {
 	return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`
 }
 
-const hslToHex = (h: number, s: number, l: number) => {
+const hslToHex = (h: number, s: number, l: number): string => {
 	h /= 360
 	s /= 100
 	l /= 100
@@ -117,7 +124,7 @@ const hslToHex = (h: number, s: number, l: number) => {
 
 const hexToCmyk = (hex: string) => {
 	// Remove the hash if it exists
-	hex = hex.replace(/^#/, '')
+	hex = _scrubHex(hex)
 
 	// Convert hex to RGB
 	const bigint = parseInt(hex, 16)
@@ -149,15 +156,6 @@ const hexToCmyk = (hex: string) => {
 	const k = Math.round(black * 100)
 
 	const cmyk = `cmyk(${c}, ${m}, ${y}, ${k})`
-
-	console.log('CMYK', c, m, y, k)
-
-	// return {
-	// 	c: Math.round(cyan * 100),
-	// 	m: Math.round(magenta * 100),
-	// 	y: Math.round(yellow * 100),
-	// 	k: Math.round(black * 100)
-	// }
 
 	return cmyk
 }

@@ -29,8 +29,8 @@ import { Icon } from 'astro-icon/components'
 					<input
 						type="text"
 						aria-label="selected hex code"
-						id="input-selected-hex"
-						class="selected-color-input"
+						id="input-hex"
+						class="color-input"
 					/></label
 				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
 			</div>
@@ -40,8 +40,8 @@ import { Icon } from 'astro-icon/components'
 					<input
 						type="text"
 						aria-label="selected RGB code"
-						id="input-selected-rgb"
-						class="selected-color-input"
+						id="input-rgb"
+						class="color-input"
 					/></label
 				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
 			</div>
@@ -51,20 +51,15 @@ import { Icon } from 'astro-icon/components'
 					<input
 						type="text"
 						aria-label="selected HSL code"
-						id="input-selected-hsl"
-						class="selected-color-input"
+						id="input-hsl"
+						class="color-input"
 					/></label
 				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
 			</div>
 			<div class="color-label-wrapper">
 				<label class="color-label">
 					<span>CMYK</span>
-					<input
-						type="text"
-						aria-label="selected CMYK code"
-						id="input-selected-cmyk"
-						class="selected-color-input"
-					/>
+					<input type="text" aria-label="selected CMYK code" id="input-cmyk" class="color-input" />
 				</label><button class="button-icon button-input-copy"><Icon name="copy" /></button>
 			</div>
 		</div>
@@ -74,9 +69,10 @@ import { Icon } from 'astro-icon/components'
 <script>
 	import { hslToHex, hexToRgb, hexToHsl, hexToCmyk } from '../utils/convertColor'
 	import {
+		updateColorValues,
 		setCanvasGradient,
 		getColorAtPosition,
-		updateColorInputValues
+		updateInputValues
 	} from '../utils/colorPicker'
 	import { copyContent } from '../utils/clipboard'
 
@@ -101,7 +97,7 @@ import { Icon } from 'astro-icon/components'
 
 			const rect = canvas.getBoundingClientRect()
 
-			const selectedColorInputs = this.querySelectorAll('.selected-color-input')
+			const colorInputs = this.querySelectorAll('.color-input')
 
 			const copyButtons = this.querySelectorAll('.button-input-copy')
 
@@ -110,16 +106,14 @@ import { Icon } from 'astro-icon/components'
 
 				const text = label.querySelector('input').value
 
-				copyContent()
+				copyContent(text)
 			}
 			copyButtons.forEach((button) => {
 				button.addEventListener('click', (e) => handleCopyButtonClick(e))
 			})
 
-			const updateRangeHex = (value: string) => hslToHex(parseInt(value), 100, 50)
-
 			const handleRangeUpdate = () => {
-				const hex = updateRangeHex(range.value)
+				const { hex } = updateColorValues({ hue: range.value })
 				setCanvasGradient(canvas, hex)
 			}
 
@@ -133,7 +127,7 @@ import { Icon } from 'astro-icon/components'
 				const canvasY = y - rect.top + 16
 
 				// console.log('Y', y, 'TOP', top, 'TOP CAN', rect.top, 'WR TOP', wrapperRect.top)
-				const hoverColor = getColorAtPosition(ctx, canvasX, canvasY)
+				const { hex } = getColorAtPosition(ctx, canvasX, canvasY)
 
 				// Set the tooltip position
 				tooltip.style.left = `${x + 10}px`
@@ -143,10 +137,10 @@ import { Icon } from 'astro-icon/components'
 
 				const paddingTop = style.paddingTop
 
-				tooltipText.innerText = hoverColor
+				tooltipText.innerText = hex
 				// Show the tooltip
 				tooltip.style.display = 'flex'
-				tooltipColor.style.background = hoverColor
+				tooltipColor.style.background = hex
 			}
 
 			const handleTooltipVisibility = (e: MouseEvent, tooltip: HTMLDivElement) => {
@@ -171,7 +165,7 @@ import { Icon } from 'astro-icon/components'
 				marker.style.left = x - 4 + 'px'
 				marker.style.top = y - 4 + 'px'
 
-				updateColorInputValues(selectedColorInputs)
+				updateInputValues(colorInputs, hex)
 			}
 
 			range.addEventListener('input', handleRangeUpdate)
@@ -208,8 +202,8 @@ import { Icon } from 'astro-icon/components'
 
 			// Set initial gradient for color picker canvas
 			document.addEventListener('DOMContentLoaded', () => {
-				const initialHexHue: string = updateRangeHex(range.value)
-				setCanvasGradient(canvas, initialHexHue)
+				const { hex } = updateColorValues({ hue: range.value })
+				setCanvasGradient(canvas, hex)
 			})
 		}
 	}
@@ -363,7 +357,7 @@ import { Icon } from 'astro-icon/components'
 		}
 	}
 
-	.selected-color-input {
+	.color-input {
 		border: 1px solid #ccc;
 		z-index: 1;
 		height: 35px;
