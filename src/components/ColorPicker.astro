@@ -1,17 +1,10 @@
 ---
+import SettingsDropdown from './SettingsDropdown.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
 <color-picker id="shook-color-picker" class="shook-color-picker opacity-0">
-	<div class="settings-dropdown-wrapper">
-		<button class="settings-button button-icon place-self-end"><Icon name="settings" /></button>
-		<ol class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
-			<li class="settings-dropdown-li">Display hex</li>
-			<li class="settings-dropdown-li">Display RGB</li>
-			<li class="settings-dropdown-li">Display HSL</li>
-			<li class="settings-dropdown-li">Display CMYK</li>
-		</ol>
-	</div>
+	<SettingsDropdown />
 	<div class="canvas-wrapper">
 		<div class="color-marker" aria-label="selected color marker"></div>
 
@@ -80,9 +73,6 @@ import { Icon } from 'astro-icon/components'
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 			const tooltipColor: HTMLSpanElement = tooltip.querySelector('.tooltip-color-preview')!
-
-			const settingsButton: HTMLButtonElement = this.querySelector('.settings-button')
-			const settingsDropdown: HTMLOListElement = this.querySelector('.settings-dropdown')
 
 			const colorInputs = this.querySelectorAll('.color-input')
 
@@ -179,24 +169,6 @@ import { Icon } from 'astro-icon/components'
 			canvas.addEventListener('click', (e) => {
 				handleCanvasClick(e)
 			})
-
-			const toggleSettingsDropdown = () => {
-				if (settingsDropdown.classList.contains('opacity-0')) {
-					settingsDropdown.style.zIndex = '5'
-
-					return setTimeout(() => {
-						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
-					}, 200)
-				} else {
-					settingsDropdown.classList.add('opacity-0', 'pointer-events-none')
-
-					setTimeout(() => {
-						settingsDropdown.style.zIndex = '-1'
-					}, 400)
-				}
-			}
-
-			settingsButton.addEventListener('click', toggleSettingsDropdown)
 		}
 	}
 
@@ -208,7 +180,7 @@ import { Icon } from 'astro-icon/components'
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		padding: 1rem 1rem 1.5rem 1rem;
+		padding: 0.5rem 1rem 1.5rem 1rem;
 		border-radius: 0.75rem;
 		box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
 		max-width: 280px;
@@ -225,9 +197,6 @@ import { Icon } from 'astro-icon/components'
 
 		outline: 1px solid #e6e6e6;
 		border-radius: 0.25rem;
-	}
-
-	#color-picker-canvas {
 	}
 
 	.color-range {
@@ -282,29 +251,6 @@ import { Icon } from 'astro-icon/components'
 			height: 0.8rem;
 			border-radius: 100%;
 			background: transparent;
-		}
-	}
-
-	.settings-dropdown-wrapper {
-		@apply relative flex items-center justify-end;
-	}
-
-	.settings-dropdown {
-		z-index: -1;
-		@apply absolute top-0 mt-5 flex flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
-	}
-
-	.settings-dropdown-li {
-		@apply relative px-3 transition-colors;
-		&::after {
-			content: '';
-			@apply absolute inset-0 mx-auto h-full w-[94%] rounded-md opacity-10 transition-colors;
-		}
-		&:hover {
-			cursor: pointer;
-			&::after {
-				@apply bg-teal-700;
-			}
 		}
 	}
 

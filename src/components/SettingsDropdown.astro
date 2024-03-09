@@ -1,0 +1,69 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<settings-menu class="settings-dropdown-wrapper">
+	<button class="settings-button button-icon place-self-end"><Icon name="settings" /></button>
+	<ol class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
+		<li class="settings-dropdown-li">Display hex</li>
+		<li class="settings-dropdown-li">Display RGB</li>
+		<li class="settings-dropdown-li">Display HSL</li>
+		<li class="settings-dropdown-li">Display CMYK</li>
+	</ol>
+</settings-menu>
+
+<script>
+	class ShookColorPickerSettingsMenu extends HTMLElement {
+		constructor() {
+			super()
+
+			const settingsButton: HTMLButtonElement = this.querySelector('.settings-button')
+			const settingsDropdown: HTMLOListElement = this.querySelector('.settings-dropdown')
+
+			const toggleSettingsDropdown = () => {
+				if (settingsDropdown.classList.contains('opacity-0')) {
+					settingsDropdown.style.zIndex = '5'
+
+					return setTimeout(() => {
+						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
+					}, 200)
+				} else {
+					settingsDropdown.classList.add('opacity-0', 'pointer-events-none')
+
+					setTimeout(() => {
+						settingsDropdown.style.zIndex = '-1'
+					}, 400)
+				}
+			}
+
+			settingsButton.addEventListener('click', toggleSettingsDropdown)
+		}
+	}
+
+	customElements.define('settings-menu', ShookColorPickerSettingsMenu)
+</script>
+
+<style lang="scss">
+	.settings-dropdown-wrapper {
+		@apply relative flex items-center justify-end;
+	}
+
+	.settings-dropdown {
+		z-index: -1;
+		@apply absolute top-0 mt-5 flex flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
+	}
+
+	.settings-dropdown-li {
+		@apply relative px-3 transition-colors;
+		&::after {
+			content: '';
+			@apply absolute inset-0 mx-auto h-full w-[94%] rounded-md opacity-10 transition-colors;
+		}
+		&:hover {
+			cursor: pointer;
+			&::after {
+				@apply bg-teal-700;
+			}
+		}
+	}
+</style>
