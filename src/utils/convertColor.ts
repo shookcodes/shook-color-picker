@@ -16,7 +16,9 @@ const hexToRgb = (hex: string): string => {
 	const g = (bigint >> 8) & 0xff
 	const b = bigint & 0xff
 
-	return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
+	const string = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
+
+	return { string, arr: r, g, b }
 }
 
 const hexToHsl = (hex: string) => {
@@ -63,17 +65,19 @@ const hexToHsl = (hex: string) => {
 	const h = Math.round(hue)
 	const s = Math.round(saturation * 100)
 	const l = Math.round(lightness * 100)
-	return `hsl(${h}, ${s}, ${l})`
+
+	const string = `hsl(${h}, ${s}, ${l})`
+	return { string, arr: [h, s, l] }
 }
 
 const hslToRgb = (h: number, s: number, l: number) => {
 	h /= 360
 	s /= 100
 	l /= 100
-	let r, g, b
+	let r1, g1, b1
 
 	if (s === 0) {
-		r = g = b = l // achromatic
+		r1 = g1 = b1 = l // achromatic
 	} else {
 		const hue2rgb = (p: number, q: number, t: number) => {
 			if (t < 0) t += 1
@@ -86,12 +90,17 @@ const hslToRgb = (h: number, s: number, l: number) => {
 
 		const q = l < 0.5 ? l * (1 + s) : l + s - l * s
 		const p = 2 * l - q
-		r = hue2rgb(p, q, h + 1 / 3)
-		g = hue2rgb(p, q, h)
-		b = hue2rgb(p, q, h - 1 / 3)
+		r1 = hue2rgb(p, q, h + 1 / 3)
+		g1 = hue2rgb(p, q, h)
+		b1 = hue2rgb(p, q, h - 1 / 3)
 	}
 
-	return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`
+	const r = Math.round(r1 * 255)
+	const g = Math.round(g1 * 255)
+	const b = Math.round(b1 * 255)
+
+	const string = `rgb(${r}, ${g}, ${b})`
+	return { string, arr: [r, g, b] }
 }
 
 const hslToHex = (h: number, s: number, l: number): string => {
@@ -112,7 +121,9 @@ const hslToHex = (h: number, s: number, l: number): string => {
 	const g = hueToRgb(h)
 	const b = hueToRgb(h - 1 / 3)
 
-	return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+	const string = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+
+	return { string }
 }
 
 const hexToCmyk = (hex: string) => {
@@ -148,30 +159,22 @@ const hexToCmyk = (hex: string) => {
 
 	const k = Math.round(black * 100)
 
-	const cmyk = `cmyk(${c}, ${m}, ${y}, ${k})`
+	const string = `cmyk(${c}, ${m}, ${y}, ${k})`
 
-	return cmyk
+	return { string, arr: [c, m, y, k] }
 }
 
 const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void => {
 	if (!hue && !hex) return
 	hue = typeof hue === 'string' ? parseInt(hue) : hue
 
-	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex)
+	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex).string
 
-	console.log('HUEEEE', hue)
-	hex = hex ? hex : hslToHex(hue, 100, 50)
+	hex = hex ? hex : hslToHex(hue, 100, 50).string
 
-	const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)
+	const rgb = hex ? hexToRgb(hex).string : hslToRgb(hue as number, 100, 50).string
 
-	const cmyk = hexToCmyk(hex)
-	// Update color model values depending on if value provided is hue and/or hex
-	// hex = hex ? hex : hslToHex(hue, 100, 50)
-	// hue = hue ? hue : hexToHsl(hue)
-	// console.log('HUE, HEX', hue, hex, hslToHex(hue, 100, 50))
-	// const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)
-
-	// const cmyk = hexToCmyk(hex)
+	const cmyk = hexToCmyk(hex).string
 
 	return { hex, rgb, hsl, cmyk }
 }

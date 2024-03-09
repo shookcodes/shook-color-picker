@@ -1,22 +1,31 @@
-import type { ColorModels, CanvasProps } from '../types'
+import type { DrawCanvas, CanvasProps, ColorModels } from '../types'
 
 import { updateColorValues } from './convertColor'
 
-// Draw the canvas then set the canvas colors
-const drawCanvas = ({ width, canvas, height, hue, zoom }: CanvasProps) => {
+// Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
+const initializeCanvas = ({ wrapper, hue }: DrawCanvas) => {
+	const width = wrapper.clientWidth
+	const height = wrapper.clientHeight
+
+	const canvas = wrapper.querySelector('canvas')
+	const marker: HTMLDivElement = wrapper.querySelector('.color-marker')!
 	canvas.width = width
 	canvas.height = height
 
-	const ctx = setCanvasGradient({ canvas, width, height, hue, zoom })
+	const inputs = wrapper.parentElement.querySelectorAll('.color-input')
 
-	return ctx
+	console.log('IN INt', inputs)
+	const ctx = setCanvasGradient({ canvas, width, height, hue })
+
+	// Initialize input values on page load
+	const vals = updateInputValues(inputs, { hue })
+
+	console.log('DAT', ctx)
+
+	return { canvas, ctx, marker }
 }
 
-const setCanvasGradient = ({ canvas, width, height, hue, zoom }: CanvasProps) => {
-	if (zoom) {
-		width = width * zoom
-		height = height * zoom
-	}
+const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
 	const ctx = canvas.getContext('2d')!
 	ctx.imageSmoothingEnabled = true
 
@@ -24,7 +33,7 @@ const setCanvasGradient = ({ canvas, width, height, hue, zoom }: CanvasProps) =>
 	const colorGradient = ctx.createLinearGradient(width * 0.04, height * 0.8, width, height)
 
 	colorGradient.addColorStop(0, `hsla(0, 0%, 100%, 1)`)
-	colorGradient.addColorStop(1, `hsla(${hue}, 100%, 50%, 0.9)`)
+	colorGradient.addColorStop(1, `hsla(${hue}, 100%, 50%, 1)`)
 
 	ctx.fillStyle = colorGradient
 	ctx.fillRect(0, 0, width, height)
@@ -56,8 +65,16 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 	return { hex, rgb, hsl, cmyk }
 }
 
-const updateInputValues = (inputs: HTMLInputElement[], hex: string) => {
-	const colorValues = updateColorValues({ hex }) as ColorModels
+const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionModels) => {
+	console.log('IN', inputs)
+	if (inputs.length === 0 || (!hex && !hue)) {
+		console.log('Error updating input color values')
+		return
+	}
+
+	const colorValues = hex
+		? (updateColorValues({ hex }) as ColorModels)
+		: (updateColorValues({ hue }) as ColorModels)
 	inputs.forEach((input) => {
 		const type = input.id.split('input-')[1] as keyof ColorModels
 		if (!type) return
@@ -66,6 +83,7 @@ const updateInputValues = (inputs: HTMLInputElement[], hex: string) => {
 			input.value = colorValues[type]
 		}
 	})
+	return { ...colorValues }
 }
 
-export { drawCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }
+export { initializeCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }

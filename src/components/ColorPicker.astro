@@ -66,17 +66,16 @@ import { Icon } from 'astro-icon/components'
 </color-picker>
 
 <script>
-	import { hslToHex, hexToRgb, hexToHsl, hexToCmyk, updateColorValues } from '../utils/convertColor'
-	import { drawCanvas, getColorAtPosition, updateInputValues } from '../utils/colorPicker'
+	import { updateColorValues } from '../utils/convertColor'
+	import { initializeCanvas, getColorAtPosition, updateInputValues } from '../utils/colorPicker'
 	import { copyContent } from '../utils/clipboard'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
 			super()
 
-			const canvas: HTMLCanvasElement = this.querySelector('#color-picker-canvas')!
 			const wrapper: HTMLCanvasElement = this.querySelector('.canvas-wrapper')!
-			let ctx: CanvasRenderingContext2D | null
+
 			const range: HTMLInputElement = this.querySelector('.color-range')!
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
@@ -85,11 +84,11 @@ import { Icon } from 'astro-icon/components'
 			const settingsButton: HTMLButtonElement = this.querySelector('.settings-button')
 			const settingsDropdown: HTMLOListElement = this.querySelector('.settings-dropdown')
 
-			const marker: HTMLDivElement = this.querySelector('.color-marker')!
-
 			const colorInputs = this.querySelectorAll('.color-input')
 
 			const copyButtons = this.querySelectorAll('.button-input-copy')
+
+			const { canvas, ctx, marker } = initializeCanvas({ wrapper, hue: range.value })
 
 			const handleCopyButtonClick = (e: MouseEvent) => {
 				const label = e.currentTarget.previousElementSibling
@@ -98,14 +97,13 @@ import { Icon } from 'astro-icon/components'
 
 				copyContent(text)
 			}
+
 			copyButtons.forEach((button) => {
 				button.addEventListener('click', (e) => handleCopyButtonClick(e))
 			})
 
 			const handleRangeUpdate = () => {
 				const { hex } = updateColorValues({ hue: range.value })
-				const width = wrapper.clientWidth
-				const height = wrapper.clientHeight
 			}
 
 			const getCursorPoint = (x, y) => {
@@ -195,17 +193,6 @@ import { Icon } from 'astro-icon/components'
 			}
 
 			settingsButton.addEventListener('click', toggleSettingsDropdown)
-
-			// Set initial gradient for color picker canvas
-			document.addEventListener('DOMContentLoaded', () => {
-				const width = wrapper.clientWidth
-				const height = wrapper.clientHeight
-
-				const hue = range.value
-				const { hex } = updateColorValues({ hue })
-
-				ctx = drawCanvas({ canvas, width, height, hue })
-			})
 		}
 	}
 
@@ -233,18 +220,19 @@ import { Icon } from 'astro-icon/components'
 	}
 
 	#color-picker-canvas {
-		border: 1px solid #ccc;
+		outline: 1px solid #e6e6e6;
 		border-radius: 0.5rem;
 	}
 
 	.color-range {
 		width: 100%;
-		-webkit-appearance: none; /* Override default CSS styles */
+		-webkit-appearance: none;
 		appearance: none;
-		width: 100%; /* Full-width */
-		height: 0.5rem; /* Specified height */
+		width: 100%;
+		height: 0.5rem;
 		border-radius: 2rem;
 		margin: 0.5rem 0;
+		// Rainbow colors for slider
 		background: linear-gradient(
 			90deg,
 			#ff0000,
@@ -273,9 +261,22 @@ import { Icon } from 'astro-icon/components'
 			#ff0040,
 			#ff0000
 		);
-		outline: none; /* Remove outline */
-		-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+		outline: none;
+		-webkit-transition: 0.2s;
 		transition: opacity 0.2s;
+
+		&::-webkit-slider-thumb,
+		&::-moz-range-thumb {
+			appearance: none;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+
+			border: 1px solid #000;
+			width: 0.8rem;
+			height: 0.8rem;
+			border-radius: 100%;
+			background: transparent;
+		}
 	}
 
 	.settings-dropdown-wrapper {
@@ -337,6 +338,7 @@ import { Icon } from 'astro-icon/components'
 		height: 8px;
 		top: 0;
 		left: 0;
+		caret-color: transparent;
 		border-radius: 100%;
 		background: #000000;
 	}

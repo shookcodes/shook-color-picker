@@ -5,6 +5,8 @@ export interface ColorModels {
 	cmyk: string
 }
 
+
+
 export interface ConversionModels {
 	hue?: string | number
 	hex?: string | undefined
@@ -16,8 +18,14 @@ export interface Canvas2DSize {
 }
 
 export interface CanvasProps extends Canvas2DSize {
+
 	canvas: HTMLCanvasElement
 	hex?: string
 	hue?: string
-	zoom?: number
+
+}
+
+export interface DrawCanvas = {
+    wrapper: HTMLDivElement
+    hue: number
 }
