@@ -1,25 +1,10 @@
-const componentToHex = (value) => {
-	var hex = value.toString(16)
-	return hex.length == 1 ? '0' + hex : hex
-}
-
-const convertToHex = (rgb) => {
-	let sliced = rgb.substring(4).slice(0, -1).split(',')
-
-	const r = parseInt(sliced[0])
-	const g = parseInt(sliced[1])
-	const b = parseInt(sliced[2])
-
-	return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
-}
-
-function _scrubHex(hex) {
+function _scrubHex(hex: string) {
 	if (hex.charAt(0) === '#') {
 		return (hex = hex.slice(1))
 	}
 }
 
-const convertFromHex = (value) => {
+const hexToRgb = (value: string) => {
 	const data = {}
 	let hex
 
@@ -32,6 +17,53 @@ const convertFromHex = (value) => {
 	data.b = hex & 0xff
 
 	return `rgb(${Math.round(data.r)}, ${Math.round(data.g)}, ${Math.round(data.b)})`
+}
+
+const hexToHsl = (hex: string) => {
+	// Remove the hash if it exists
+	hex = hex.replace(/^#/, '')
+
+	// Convert hex to RGB
+	const bigint = parseInt(hex, 16)
+	const r = (bigint >> 16) & 255
+	const g = (bigint >> 8) & 255
+	const b = bigint & 255
+
+	// Normalize RGB values to range [0, 1]
+	const normalizedR = r / 255
+	const normalizedG = g / 255
+	const normalizedB = b / 255
+
+	// Find the maximum and minimum values
+	const max = Math.max(normalizedR, normalizedG, normalizedB)
+	const min = Math.min(normalizedR, normalizedG, normalizedB)
+
+	// Calculate the lightness
+	const lightness = (max + min) / 2
+
+	// Calculate the saturation
+	let saturation = 0
+	if (max !== min) {
+		saturation = lightness > 0.5 ? (max - min) / (2 - max - min) : (max - min) / (max + min)
+	}
+
+	// Calculate the hue
+	let hue = 0
+	if (max === normalizedR) {
+		hue = ((normalizedG - normalizedB) / (max - min) + 6) % 6
+	} else if (max === normalizedG) {
+		hue = (normalizedB - normalizedR) / (max - min) + 2
+	} else if (max === normalizedB) {
+		hue = (normalizedR - normalizedG) / (max - min) + 4
+	}
+
+	// Convert hue to degrees
+	hue *= 60
+
+	const h = Math.round(hue)
+	const s = Math.round(saturation * 100)
+	const l = Math.round(lightness * 100)
+	return `hsl(${h}, ${s}, ${l})`
 }
 
 const hslToRgb = (h: number, s: number, l: number) => {
@@ -83,4 +115,51 @@ const hslToHex = (h: number, s: number, l: number) => {
 	return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
 }
 
-export { convertToHex, convertFromHex, hslToRgb, hslToHex }
+const hexToCmyk = (hex: string) => {
+	// Remove the hash if it exists
+	hex = hex.replace(/^#/, '')
+
+	// Convert hex to RGB
+	const bigint = parseInt(hex, 16)
+	const r = (bigint >> 16) & 255
+	const g = (bigint >> 8) & 255
+	const b = bigint & 255
+
+	// Normalize RGB values to range [0, 1]
+	const normalizedR = r / 255
+	const normalizedG = g / 255
+	const normalizedB = b / 255
+
+	// Find the maximum value among R, G, and B
+	const c1 = 1 - normalizedR
+	const m1 = 1 - normalizedG
+	const y1 = 1 - normalizedB
+	const k1 = Math.min(c1, m1, y1)
+
+	// Calculate CMYK values
+	const cyan = (c1 - k1) / (1 - k1)
+	const magenta = (m1 - k1) / (1 - k1)
+	const yellow = (y1 - k1) / (1 - k1)
+	const black = k1
+
+	const c = Math.round(cyan * 100)
+	const m = Math.round(magenta * 100)
+	const y = Math.round(yellow * 100)
+
+	const k = Math.round(black * 100)
+
+	const cmyk = `cmyk(${c}, ${m}, ${y}, ${k})`
+
+	console.log('CMYK', c, m, y, k)
+
+	// return {
+	// 	c: Math.round(cyan * 100),
+	// 	m: Math.round(magenta * 100),
+	// 	y: Math.round(yellow * 100),
+	// 	k: Math.round(black * 100)
+	// }
+
+	return cmyk
+}
+
+export { hslToRgb, hslToHex, hexToHsl, hexToRgb, hexToCmyk }

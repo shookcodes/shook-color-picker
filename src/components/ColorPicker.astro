@@ -1,18 +1,84 @@
 ---
-
+import { Icon } from 'astro-icon/components'
 ---
 
-<color-picker id="shook-color-picker" class="w-max">
-	<div id="tooltip-color">
-		<span id="tooltip-color-preview"></span><span id="tooltip-color-text"></span>
+<color-picker id="shook-color-picker">
+	<div id="settings-dropdown-wrapper" class="relative">
+		<button class="button-icon place-self-end" id="settings-button"><Icon name="settings" /></button
+		>
+		<ol id="settings-dropdown" class="pointer-events-none transition-all opacity-0 duration-300">
+			<li class="settings-dropdown-li">Display hex</li>
+			<li class="settings-dropdown-li">Display RGB</li>
+			<li class="settings-dropdown-li">Display HSL</li>
+			<li class="settings-dropdown-li">Display CMYK</li>
+		</ol>
 	</div>
-	<canvas id="color-picker-canvas"></canvas>
-	<input type="range" id="color-range" min="0" max="360" />
+	<div id="color-picker-canvas-wrapper">
+		<div id="tooltip-color">
+			<span id="tooltip-color-preview"></span><span id="tooltip-color-text"></span>
+		</div>
+		<div id="color-marker"></div>
+		<canvas id="color-picker-canvas"></canvas>
+	</div>
+	<input type="range" id="color-range" min="0" max="360" aria-label="hue" />
+	<div class="color-inputs w-full max-w-[180px]">
+		<div class="flex flex-wrap gap-4">
+			<div class="color-label-wrapper">
+				<label class="color-label">
+					<span>Hex</span>
+					<input
+						type="text"
+						aria-label="selected hex code"
+						id="input-selected-hex"
+						class="selected-color-input"
+					/></label
+				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
+			</div>
+			<div class="color-label-wrapper">
+				<label class="color-label">
+					<span>RGB</span>
+					<input
+						type="text"
+						aria-label="selected RGB code"
+						id="input-selected-rgb"
+						class="selected-color-input"
+					/></label
+				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
+			</div>
+			<div class="color-label-wrapper">
+				<label class="color-label">
+					<span>HSL</span>
+					<input
+						type="text"
+						aria-label="selected HSL code"
+						id="input-selected-hsl"
+						class="selected-color-input"
+					/></label
+				><button class="button-icon button-input-copy"><Icon name="copy" /></button>
+			</div>
+			<div class="color-label-wrapper">
+				<label class="color-label">
+					<span>CMYK</span>
+					<input
+						type="text"
+						aria-label="selected CMYK code"
+						id="input-selected-cmyk"
+						class="selected-color-input"
+					/>
+				</label><button class="button-icon button-input-copy"><Icon name="copy" /></button>
+			</div>
+		</div>
+	</div>
 </color-picker>
 
 <script>
-	import { hslToHex } from '../utils/convertColor'
-	import { setCanvasGradient, getColorAtPosition } from '../utils/color-picker'
+	import { hslToHex, hexToRgb, hexToHsl, hexToCmyk } from '../utils/convertColor'
+	import {
+		setCanvasGradient,
+		getColorAtPosition,
+		updateColorInputValues
+	} from '../utils/colorPicker'
+	import { copyContent } from '../utils/clipboard'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -26,6 +92,30 @@
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('#tooltip-color-text')!
 			const tooltipColor: HTMLSpanElement = tooltip.querySelector('#tooltip-color-preview')!
 
+			const settingsButton: HTMLButtonElement = this.querySelector('#settings-button')
+			const settingsDropdown: HTMLOListElement = this.querySelector('#settings-dropdown')
+
+			const marker: HTMLDivElement = this.querySelector('#color-marker')!
+
+			const wrapperRect = this.getBoundingClientRect()
+
+			const rect = canvas.getBoundingClientRect()
+
+			const selectedColorInputs = this.querySelectorAll('.selected-color-input')
+
+			const copyButtons = this.querySelectorAll('.button-input-copy')
+
+			const handleCopyButtonClick = (e: MouseEvent) => {
+				const label = e.currentTarget.previousElementSibling
+
+				const text = label.querySelector('input').value
+
+				copyContent()
+			}
+			copyButtons.forEach((button) => {
+				button.addEventListener('click', (e) => handleCopyButtonClick(e))
+			})
+
 			const updateRangeHex = (value: string) => hslToHex(parseInt(value), 100, 50)
 
 			const handleRangeUpdate = () => {
@@ -34,19 +124,25 @@
 			}
 
 			const updateTooltipPosition = (e: MouseEvent, tooltip: HTMLDivElement) => {
-				const rect = canvas.getBoundingClientRect()
+				const top = rect.top + wrapperRect.top
+				const left = wrapperRect.left - rect.left
+
 				const x = e.clientX
 				const y = e.clientY
-				const canvasX = x - rect.left
-				const canvasY = y - rect.top
+				const canvasX = x - rect.left + 16
+				const canvasY = y - rect.top + 16
 
+				// console.log('Y', y, 'TOP', top, 'TOP CAN', rect.top, 'WR TOP', wrapperRect.top)
 				const hoverColor = getColorAtPosition(ctx, canvasX, canvasY)
 
 				// Set the tooltip position
 				tooltip.style.left = `${x + 10}px`
 				tooltip.style.top = `${y}px`
 
-				console.log('TT Color', hoverColor)
+				const style = getComputedStyle(this)
+
+				const paddingTop = style.paddingTop
+
 				tooltipText.innerText = hoverColor
 				// Show the tooltip
 				tooltip.style.display = 'flex'
@@ -61,6 +157,23 @@
 				}
 			}
 
+			const handleCanvasClick = (e: MouseEvent) => {
+				const hex = tooltipText.innerText
+				const top = wrapperRect.top + rect.top
+				const left = wrapperRect.left + rect.left
+
+				const x = e.clientX
+				const y = e.clientY
+				const canvasX = x - rect.left
+				const canvasY = y - rect.top
+
+				marker.style.display = 'block'
+				marker.style.left = x - 4 + 'px'
+				marker.style.top = y - 4 + 'px'
+
+				updateColorInputValues(selectedColorInputs)
+			}
+
 			range.addEventListener('input', handleRangeUpdate)
 
 			canvas.addEventListener('mouseenter', (e) => handleTooltipVisibility(e, tooltip))
@@ -68,6 +181,30 @@
 			canvas.addEventListener('mousemove', (e) => updateTooltipPosition(e, tooltip))
 
 			canvas.addEventListener('mouseleave', (e) => handleTooltipVisibility(e, tooltip))
+
+			canvas.addEventListener('click', (e) => {
+				handleCanvasClick(e)
+			})
+
+			const toggleSettingsDropdown = () => {
+				if (settingsDropdown.classList.contains('opacity-0')) {
+					// settingsDropdown.classList.add('scale-x-0', 'opacity-1')
+					settingsDropdown.style.zIndex = '5'
+
+					return setTimeout(() => {
+						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
+					}, 200)
+				} else {
+					// settingsDropdown.classList.remove('scale-x-0', 'opacity-1')
+					settingsDropdown.classList.add('opacity-0', 'pointer-events-none', 'scale-x-90')
+
+					setTimeout(() => {
+						settingsDropdown.style.zIndex = '-1'
+					}, 400)
+				}
+			}
+
+			settingsButton.addEventListener('click', toggleSettingsDropdown)
 
 			// Set initial gradient for color picker canvas
 			document.addEventListener('DOMContentLoaded', () => {
@@ -79,15 +216,17 @@
 
 	customElements.define('color-picker', ShookColorPicker)
 </script>
+
 <style lang="scss">
 	#shook-color-picker {
 		display: flex;
 		flex-direction: column;
-		gap: 1.75rem;
+		gap: 0.5rem;
 		padding: 1rem 1rem 1.5rem 1rem;
-		// border: 1px solid #eeeeee;
 		border-radius: 0.75rem;
 		box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
+		background: #f9f9f9;
+		width: max-content;
 	}
 
 	#color-picker-canvas {
@@ -99,7 +238,6 @@
 
 	#color-range {
 		width: 100%;
-
 		-webkit-appearance: none; /* Override default CSS styles */
 		appearance: none;
 		width: 100%; /* Full-width */
@@ -138,6 +276,29 @@
 		transition: opacity 0.2s;
 	}
 
+	#settings-dropdown-wrapper {
+		@apply flex items-center justify-end;
+	}
+
+	#settings-dropdown {
+		z-index: -1;
+		@apply absolute top-0 mt-5 flex flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
+	}
+
+	.settings-dropdown-li {
+		@apply relative px-3 transition-colors;
+		&::after {
+			content: '';
+			@apply absolute inset-0 mx-auto h-full w-[94%] rounded-md opacity-10 transition-colors;
+		}
+		&:hover {
+			cursor: pointer;
+			&::after {
+				@apply bg-teal-700;
+			}
+		}
+	}
+
 	#selected-color {
 		margin-top: 20px;
 		font-size: 18px;
@@ -154,6 +315,20 @@
 		align-items: center;
 		gap: 0.5rem;
 		transition: opacity 0.2s ease-in-out;
+		z-index: 3;
+		& span {
+			@apply text-neutral-100;
+		}
+	}
+
+	#color-marker {
+		position: absolute;
+		z-index: 2;
+		display: none;
+		width: 8px;
+		height: 8px;
+		border-radius: 100%;
+		background: #000000;
 	}
 
 	#tooltip-color-preview {
@@ -162,5 +337,46 @@
 		border-radius: 4px;
 		// aspect-ratio: square;
 		border: 1px solid #c7c7c7;
+	}
+
+	.button-icon {
+		@apply h-5 w-5 text-neutral-600 transition-all duration-300;
+
+		&:hover {
+			@apply text-neutral-400;
+		}
+
+		&.button-input-copy {
+			@apply absolute right-2 top-7 z-10;
+		}
+	}
+
+	.color-label-wrapper {
+		@apply relative;
+	}
+
+	.color-label {
+		@apply flex flex-col gap-1;
+
+		& span {
+			@apply text-xs;
+		}
+	}
+
+	.selected-color-input {
+		border: 1px solid #ccc;
+		z-index: 1;
+		height: 35px;
+		padding: 0 0.5rem;
+		border-radius: 6px;
+	}
+
+	.color-inputs {
+		gap: 1.75rem;
+		@apply flex flex-col border-t border-neutral-200 pt-6;
+	}
+
+	span {
+		@apply text-neutral-700;
 	}
 </style>

@@ -1,8 +1,4 @@
-const setCanvasGradient = (
-	canvas: HTMLCanvasElement,
-	// ctx: CanvasRenderingContext2D,
-	hex: string
-) => {
+const setCanvasGradient = (canvas: HTMLCanvasElement, hex: string) => {
 	const ctx = canvas.getContext('2d')!
 	// Update canvas color
 	const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
@@ -23,11 +19,9 @@ const setCanvasGradient = (
 
 	return ctx
 }
-// ctx: CanvasRenderingContext2D,
 const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
 	const imageData = ctx.getImageData(x, y, 1, 1).data
 
-	console.log('COLOR POS', imageData)
 	const toHex = (value: number) => {
 		const hex = value.toString(16)
 		return hex.length === 1 ? '0' + hex : hex
@@ -35,8 +29,11 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
-	console.log('CUR HEX', imageData)
 	return currentHex
 }
 
-export { setCanvasGradient, getColorAtPosition }
+const updateColorInputValues = (inputs) => {
+
+}
+
+export { setCanvasGradient, getColorAtPosition, updateColorInputValues }
