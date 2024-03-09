@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components'
 ---
 
-<color-picker id="shook-color-picker" class="shook-color-picker">
+<color-picker id="shook-color-picker" class="shook-color-picker opacity-0">
 	<div class="settings-dropdown-wrapper">
 		<button class="settings-button button-icon place-self-end"><Icon name="settings" /></button>
 		<ol class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
@@ -19,7 +19,7 @@ import { Icon } from 'astro-icon/components'
 			<span class="tooltip-color-preview"></span><span class="tooltip-color-text"></span>
 		</div>
 
-		<canvas id="color-picker-canvas"></canvas>
+		<canvas id="color-picker-canvas "></canvas>
 	</div>
 	<input type="range" class="color-range" min="0" max="360" aria-label="hue" />
 	<div class="color-inputs">
@@ -67,7 +67,7 @@ import { Icon } from 'astro-icon/components'
 
 <script>
 	import { updateColorValues } from '../utils/convertColor'
-	import { initializeCanvas, getColorAtPosition, updateInputValues } from '../utils/colorPicker'
+	import { setCanvas, getColorAtPosition, updateInputValues } from '../utils/colorPicker'
 	import { copyContent } from '../utils/clipboard'
 
 	class ShookColorPicker extends HTMLElement {
@@ -88,7 +88,9 @@ import { Icon } from 'astro-icon/components'
 
 			const copyButtons = this.querySelectorAll('.button-input-copy')
 
-			const { canvas, ctx, marker } = initializeCanvas({ wrapper, hue: range.value })
+			const { canvas, ctx, marker } = setCanvas({ wrapper, hue: range.value })
+
+			canvas.addEventListener('load', this.classList.remove('opacity-0'))
 
 			const handleCopyButtonClick = (e: MouseEvent) => {
 				const label = e.currentTarget.previousElementSibling
@@ -102,8 +104,10 @@ import { Icon } from 'astro-icon/components'
 				button.addEventListener('click', (e) => handleCopyButtonClick(e))
 			})
 
-			const handleRangeUpdate = () => {
-				const { hex } = updateColorValues({ hue: range.value })
+			// Update the canvas gradients when the color slider range is updated
+			const handleRangeUpdate = (e: MouseEvent) => {
+				const hue = e.target.value
+				setCanvas({ wrapper, hue })
 			}
 
 			const getCursorPoint = (x, y) => {
@@ -161,7 +165,7 @@ import { Icon } from 'astro-icon/components'
 				marker.style.left = `${left - 4}px`
 				marker.style.top = `${top - 4}px`
 
-				updateInputValues(colorInputs, hex)
+				updateInputValues(colorInputs, { hex })
 			}
 
 			range.addEventListener('input', handleRangeUpdate)
@@ -210,6 +214,7 @@ import { Icon } from 'astro-icon/components'
 		max-width: 280px;
 		background: #f9f9f9;
 		width: max-content;
+		transition: all 0.2s ease-in;
 	}
 
 	.canvas-wrapper {
@@ -217,11 +222,12 @@ import { Icon } from 'astro-icon/components'
 		width: 100%;
 		height: 100%;
 		max-height: 200px;
+
+		outline: 1px solid #e6e6e6;
+		border-radius: 0.25rem;
 	}
 
 	#color-picker-canvas {
-		outline: 1px solid #e6e6e6;
-		border-radius: 0.5rem;
 	}
 
 	.color-range {
@@ -370,6 +376,7 @@ import { Icon } from 'astro-icon/components'
 		@apply flex flex-col gap-1;
 
 		& span {
+			caret-color: transparent;
 			@apply text-xs;
 		}
 	}

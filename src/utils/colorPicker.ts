@@ -3,7 +3,7 @@ import type { DrawCanvas, CanvasProps, ColorModels } from '../types'
 import { updateColorValues } from './convertColor'
 
 // Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
-const initializeCanvas = ({ wrapper, hue }: DrawCanvas) => {
+const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
 	const width = wrapper.clientWidth
 	const height = wrapper.clientHeight
 
@@ -14,13 +14,10 @@ const initializeCanvas = ({ wrapper, hue }: DrawCanvas) => {
 
 	const inputs = wrapper.parentElement.querySelectorAll('.color-input')
 
-	console.log('IN INt', inputs)
 	const ctx = setCanvasGradient({ canvas, width, height, hue })
 
 	// Initialize input values on page load
-	const vals = updateInputValues(inputs, { hue })
-
-	console.log('DAT', ctx)
+	updateInputValues(inputs, { hue })
 
 	return { canvas, ctx, marker }
 }
@@ -66,7 +63,6 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 }
 
 const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionModels) => {
-	console.log('IN', inputs)
 	if (inputs.length === 0 || (!hex && !hue)) {
 		console.log('Error updating input color values')
 		return
@@ -86,4 +82,4 @@ const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionM
 	return { ...colorValues }
 }
 
-export { initializeCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }
+export { setCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }
