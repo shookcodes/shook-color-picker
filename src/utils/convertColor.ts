@@ -1,3 +1,5 @@
+import type { ColorModels, ConversionModels } from '../types'
+
 function _scrubHex(hex: string) {
 	if (hex.charAt(0) === '#') {
 		return (hex = hex.slice(1))
@@ -6,22 +8,13 @@ function _scrubHex(hex: string) {
 }
 
 const hexToRgb = (hex: string): string => {
-	// const rgb = { r: 0, g: 0, b: 0 }
-
-	// // remove # from hex value
-	// const scrubHex = _scrubHex(value)
-
 	hex = '0x' + _scrubHex(hex)
-	// rgb.r = (hex >> 16) & 0xff
-	// rgb.g = (hex >> 8) & 0xff
-	// rgb.b = hex & 0xff
 
 	const bigint = parseInt(hex, 16)
-	// const rgb: { r: number; g: number; b: number } = {
+
 	const r = (bigint >> 16) & 0xff
 	const g = (bigint >> 8) & 0xff
 	const b = bigint & 0xff
-	//   };
 
 	return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
 }
@@ -160,4 +153,25 @@ const hexToCmyk = (hex: string) => {
 	return cmyk
 }
 
-export { hslToRgb, hslToHex, hexToHsl, hexToRgb, hexToCmyk }
+const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void => {
+	if (!hue && !hex) return
+	hue = typeof hue === 'string' ? parseInt(hue) : hue
+
+	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex)
+	hex = hex ? hex : hslToHex(hue, 100, 50)
+
+	const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)
+
+	const cmyk = hexToCmyk(hex)
+	// Update color model values depending on if value provided is hue and/or hex
+	// hex = hex ? hex : hslToHex(hue, 100, 50)
+	// hue = hue ? hue : hexToHsl(hue)
+	// console.log('HUE, HEX', hue, hex, hslToHex(hue, 100, 50))
+	// const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)
+
+	// const cmyk = hexToCmyk(hex)
+
+	return { hex, rgb, hsl, cmyk }
+}
+
+export { hslToRgb, hslToHex, hexToHsl, hexToRgb, hexToCmyk, updateColorValues }

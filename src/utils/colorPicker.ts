@@ -1,50 +1,53 @@
-import { hslToHex, hslToRgb, hexToRgb, hexToCmyk } from './convertColor'
+import type { ColorModels, CanvasProps } from '../types'
 
-export interface ColorModels {
-	hex: string
-	rgb: string
-	hsl: string
-	cmyk: string
+import { updateColorValues } from './convertColor'
+
+// Draw the canvas then set the canvas colors
+const drawCanvas = ({ width, canvas, height, hex, zoom }: CanvasProps) => {
+	canvas.width = width
+	canvas.height = height
+
+	const { ctx } = setCanvasGradient({ canvas, width, height, currentHex: hex, zoom })
+
+	return ctx
 }
 
-export interface ConversionModels {
-	hue?: string | number
-	hex?: string | undefined
-}
-const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void => {
-	if (!hue && !hex) return
-	hue = typeof hue === 'string' ? parseInt(hue) : hue
-
-	// Update color model values depending on if value provided is hue and/or hex
-	hex = hue ? hslToHex(hue, 100, 50) : (hex as string)
-	const rgb = hex ? hexToRgb(hex) : hslToRgb(hue as number, 100, 50)
-	const hsl = `hsl(${hue}, ${100}, ${50})`
-	const cmyk = hexToCmyk(hex)
-
-	return { hex, rgb, hsl, cmyk }
-}
-
-const setCanvasGradient = (canvas: HTMLCanvasElement, hex: string) => {
+const setCanvasGradient = ({
+	canvas,
+	width,
+	height,
+	currentHex = '#ffffff',
+	zoom
+}: CanvasProps) => {
+	if (zoom) {
+		width = width * zoom
+		height = height * zoom
+	}
 	const ctx = canvas.getContext('2d')!
-	// Update canvas color
-	const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
-	gradient.addColorStop(0, hex)
-	ctx.fillStyle = gradient
+	ctx.imageSmoothingEnabled = false
 
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
+	// Update canvas color based on the hex param
+	const colorGradient = ctx.createLinearGradient(0, 0, width, 0)
+	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorModels
 
-	console.log('W', canvas.width, canvas.height)
+	console.log('HS', hex, rgb, hsl, cmyk)
+	colorGradient.addColorStop(0, hex)
+	colorGradient.addColorStop(1, hex)
+	ctx.fillStyle = colorGradient
+
+	ctx.fillRect(0, 0, width, height)
+
 	// Update white -> color -> black gradient on canvas
-	const brightnessGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+	const brightnessGradient = ctx.createLinearGradient(0, 0, 0, height)
 	brightnessGradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
 	brightnessGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)')
 	brightnessGradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)')
 	brightnessGradient.addColorStop(1, 'rgba(0, 0, 0, 1)')
 
 	ctx.fillStyle = brightnessGradient
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
+	ctx.fillRect(0, 0, width, height)
 
-	return ctx
+	return { ctx }
 }
 
 const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
@@ -58,7 +61,6 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
-	console.log('H', currentHex)
 	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorModels
 	return { hex, rgb, hsl, cmyk }
 }
@@ -75,4 +77,4 @@ const updateInputValues = (inputs: HTMLInputElement[], hex: string) => {
 	})
 }
 
-export { updateColorValues, setCanvasGradient, getColorAtPosition, updateInputValues }
+export { drawCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }
