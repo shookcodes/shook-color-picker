@@ -1,0 +1,100 @@
+---
+const { type = 'color', title, ariaLabel, id } = Astro.props
+
+const wrapperClass = `${type}-label-wrapper`
+const labelClass = `${type}-label`
+const inputClass = `${type}-input`
+---
+
+<color-picker-input class={wrapperClass}>
+	<label class={labelClass}>
+		<span>{title}</span>
+		<input type="text" aria-label={ariaLabel} id={id} class={inputClass} /></label
+	>
+	<slot name="inner-button" />
+	<span class="message-span opacity-0"></span>
+</color-picker-input>
+
+<script>
+	import { copyContent } from '../../utils/clipboard'
+	class ShookColorPickerInput extends HTMLElement {
+		constructor() {
+			super()
+
+			const copyButton = this.querySelector('.button-input-copy')
+
+			const messageSpan = this.querySelector('.message-span')
+
+			const copyText = async (text) => await copyContent(text)
+
+			if (copyButton) {
+				const handleCopyButtonClick = async (e: MouseEvent) => {
+					const label = e.currentTarget.previousElementSibling
+
+					const text = label.querySelector('input').value
+
+					const copied = await copyContent(text)
+					console.log('cop', copied)
+
+					if (copied) {
+						messageSpan.classList.add('message-ok')
+						messageSpan.innerText = 'Copied!'
+					} else {
+						messageSpan.classList.add('message-error')
+						messageSpan.innerText = 'Error copying'
+					}
+					messageSpan.classList.remove('opacity-0')
+					setTimeout(() => {
+						messageSpan.classList.add('opacity-0')
+					}, 3000)
+
+					setTimeout(() => {
+						messageSpan.classList.remove('message-ok', 'message-error')
+						messageSpan.innerText = ''
+					}, 4000)
+				}
+
+				copyButton.addEventListener('click', (e) => handleCopyButtonClick(e))
+			}
+		}
+	}
+	customElements.define('color-picker-input', ShookColorPickerInput)
+</script>
+
+<style lang="scss">
+	.color-label-wrapper {
+		@apply relative;
+	}
+
+	.color-label {
+		@apply flex flex-col gap-1;
+
+		& span {
+			caret-color: transparent;
+			@apply text-xs;
+		}
+	}
+
+	.color-input {
+		border: 1px solid #ccc;
+		z-index: 1;
+		height: 35px;
+		padding: 0 0.5rem;
+		border-radius: 6px;
+	}
+
+	.message-span {
+		transition: opacity 0.2s ease-in-out;
+
+		@apply absolute right-0 top-12 z-10 mt-1.5 text-sm
+			font-semibold;
+
+		&.message-ok {
+			@apply text-green-600;
+		}
+
+		&.message-error {
+			@apply text-red-600;
+		}
+	}
+</style>

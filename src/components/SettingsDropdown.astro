@@ -1,10 +1,17 @@
 ---
+import Button from './global/Button.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
 <settings-menu class="settings-dropdown-wrapper">
-	<button class="settings-button button-icon place-self-end"><Icon name="settings" /></button>
-	<ol class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
+	<Button
+		ariaLabel="click to toggle color picker settings"
+		classList="settings-button button-icon place-self-end"><Icon name="settings" /></Button
+	>
+
+	<ol
+		aria-hidden="true"
+		class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
 		<li class="settings-dropdown-li">Display hex</li>
 		<li class="settings-dropdown-li">Display RGB</li>
 		<li class="settings-dropdown-li">Display HSL</li>
@@ -26,9 +33,12 @@ import { Icon } from 'astro-icon/components'
 
 					return setTimeout(() => {
 						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
+
+						settingsDropdown.ariaHidden = false
 					}, 200)
 				} else {
 					settingsDropdown.classList.add('opacity-0', 'pointer-events-none')
+					settingsDropdown.ariaHidden = true
 
 					setTimeout(() => {
 						settingsDropdown.style.zIndex = '-1'

@@ -1,0 +1,18 @@
+---
+const { classList, ariaLabel } = Astro.props
+---
+
+<button aria-label={ariaLabel} class={classList}><slot /> </button>
+<style lang="scss">
+	.button-icon {
+		@apply h-5 w-5 text-neutral-600 transition-all duration-300;
+
+		&:hover {
+			@apply text-neutral-400;
+		}
+	}
+
+	.button-input-copy {
+		@apply absolute right-2 top-7 z-10;
+	}
+</style>

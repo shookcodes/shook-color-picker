@@ -1,5 +1,8 @@
 ---
 import SettingsDropdown from './SettingsDropdown.astro'
+import Button from './global/Button.astro'
+import Input from './global/Input.astro'
+
 import { Icon } from 'astro-icon/components'
 ---
 
@@ -16,52 +19,40 @@ import { Icon } from 'astro-icon/components'
 	</div>
 	<input type="range" class="color-range" min="0" max="360" aria-label="hue" />
 	<div class="color-inputs">
-		<div class="color-label-wrapper">
-			<label class="color-label">
-				<span>Hex</span>
-				<input
-					type="text"
-					aria-label="selected hex code"
-					id="input-hex"
-					class="color-input"
-				/></label
-			><button class="button-icon button-input-copy"><Icon name="copy" /></button>
-		</div>
-		<div class="color-label-wrapper">
-			<label class="color-label">
-				<span>RGB</span>
-				<input
-					type="text"
-					aria-label="selected RGB code"
-					id="input-rgb"
-					class="color-input"
-				/></label
-			><button class="button-icon button-input-copy"><Icon name="copy" /></button>
-		</div>
-		<div class="color-label-wrapper">
-			<label class="color-label">
-				<span>HSL</span>
-				<input
-					type="text"
-					aria-label="selected HSL code"
-					id="input-hsl"
-					class="color-input"
-				/></label
-			><button class="button-icon button-input-copy"><Icon name="copy" /></button>
-		</div>
-		<div class="color-label-wrapper">
-			<label class="color-label">
-				<span>CMYK</span>
-				<input type="text" aria-label="selected CMYK code" id="input-cmyk" class="color-input" />
-			</label><button class="button-icon button-input-copy"><Icon name="copy" /></button>
-		</div>
+		<Input type="color" ariaLabel="selected hex code value" title="Hex"
+			><Button
+				slot="inner-button"
+				ariaLabel="copy the selected hex value"
+				classList="button-icon button-input-copy"><Icon name="copy" /></Button
+			></Input
+		>
+		<Input type="color" ariaLabel="selected RGB code value" title="RGB"
+			><Button
+				slot="inner-button"
+				ariaLabel="copy the selected RGB value"
+				classList="button-icon button-input-copy"><Icon name="copy" /></Button
+			></Input
+		>
+		<Input type="color" ariaLabel="selected HSL code value" title="HSL"
+			><Button
+				slot="inner-button"
+				ariaLabel="copy the selected HSL value"
+				classList="button-icon button-input-copy"><Icon name="copy" /></Button
+			></Input
+		>
+		<Input type="color" ariaLabel="selected CMYK code value" title="CMYK"
+			><Button
+				slot="inner-button"
+				ariaLabel="copy the selected CMYK value"
+				classList="button-icon button-input-copy"><Icon name="copy" /></Button
+			></Input
+		>
 	</div>
 </color-picker>
 
 <script>
 	import { updateColorValues } from '../utils/convertColor'
 	import { setCanvas, getColorAtPosition, updateInputValues } from '../utils/colorPicker'
-	import { copyContent } from '../utils/clipboard'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -76,23 +67,9 @@ import { Icon } from 'astro-icon/components'
 
 			const colorInputs = this.querySelectorAll('.color-input')
 
-			const copyButtons = this.querySelectorAll('.button-input-copy')
-
 			const { canvas, ctx, marker } = setCanvas({ wrapper, hue: range.value })
 
 			canvas.addEventListener('load', this.classList.remove('opacity-0'))
-
-			const handleCopyButtonClick = (e: MouseEvent) => {
-				const label = e.currentTarget.previousElementSibling
-
-				const text = label.querySelector('input').value
-
-				copyContent(text)
-			}
-
-			copyButtons.forEach((button) => {
-				button.addEventListener('click', (e) => handleCopyButtonClick(e))
-			})
 
 			// Update the canvas gradients when the color slider range is updated
 			const handleRangeUpdate = (e: MouseEvent) => {
@@ -300,39 +277,6 @@ import { Icon } from 'astro-icon/components'
 		height: 1rem;
 		border-radius: 4px;
 		border: 1px solid #c7c7c7;
-	}
-
-	.button-icon {
-		@apply h-5 w-5 text-neutral-600 transition-all duration-300;
-
-		&:hover {
-			@apply text-neutral-400;
-		}
-
-		&.button-input-copy {
-			@apply absolute right-2 top-7 z-10;
-		}
-	}
-
-	.color-label-wrapper {
-		@apply relative;
-	}
-
-	.color-label {
-		@apply flex flex-col gap-1;
-
-		& span {
-			caret-color: transparent;
-			@apply text-xs;
-		}
-	}
-
-	.color-input {
-		border: 1px solid #ccc;
-		z-index: 1;
-		height: 35px;
-		padding: 0 0.5rem;
-		border-radius: 6px;
 	}
 
 	.color-inputs {
