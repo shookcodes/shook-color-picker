@@ -12,7 +12,7 @@ const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
 	canvas.width = width
 	canvas.height = height
 
-	const inputs = wrapper.parentElement!.querySelectorAll('.color-input')
+	const inputs = wrapper.parentElement!.querySelectorAll('.color-input') as HTMLInputElement[]
 
 	const ctx = setCanvasGradient({ canvas, width, height, hue })
 
@@ -62,6 +62,17 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 	return { hex, rgb, hsl, cmyk }
 }
 
+const getCursorPoint = (el, x, y) => {
+	if (!x || !y) return
+	const bounds = el.getBoundingClientRect()
+
+	const left = bounds.left >= 0 ? x - bounds.left : x + bounds.left * -1
+
+	const top = bounds.top >= 0 ? y - bounds.top : bounds.bottom + y
+
+	return { left, top }
+}
+
 const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionModels) => {
 	if (inputs.length === 0 || (!hex && !hue)) {
 		console.log('Error updating input color values')
@@ -82,4 +93,4 @@ const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionM
 	return { ...colorValues }
 }
 
-export { setCanvas, setCanvasGradient, getColorAtPosition, updateInputValues }
+export { setCanvas, setCanvasGradient, getColorAtPosition, getCursorPoint, updateInputValues }
