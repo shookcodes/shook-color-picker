@@ -34,7 +34,6 @@ const inputClass = `${type}-input`
 					const text = label.querySelector('input').value
 
 					const copied = await copyContent(text)
-					console.log('cop', copied)
 
 					if (copied) {
 						messageSpan.classList.add('message-ok')

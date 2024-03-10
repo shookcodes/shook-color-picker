@@ -1,4 +1,11 @@
-import type { ColorModels, ConversionModels } from '../types'
+import type {
+	ColorModels,
+	ConversionModels,
+	RGBObject,
+	HSLObject,
+	HexObject,
+	CMYKObject
+} from '../types'
 
 function _scrubHex(hex: string) {
 	if (hex.charAt(0) === '#') {
@@ -7,7 +14,7 @@ function _scrubHex(hex: string) {
 	return hex
 }
 
-const hexToRgb = (hex: string): string => {
+const hexToRgb = (hex: string): RGBObject => {
 	hex = '0x' + _scrubHex(hex)
 
 	const bigint = parseInt(hex, 16)
@@ -18,10 +25,10 @@ const hexToRgb = (hex: string): string => {
 
 	const string = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
 
-	return { string, arr: r, g, b }
+	return { string, arr: [r, g, b] }
 }
 
-const hexToHsl = (hex: string) => {
+const hexToHsl = (hex: string): HSLObject => {
 	// Remove the hash if it exists
 	hex = hex.replace(/^#/, '')
 
@@ -103,7 +110,7 @@ const hslToRgb = (h: number, s: number, l: number) => {
 	return { string, arr: [r, g, b] }
 }
 
-const hslToHex = (h: number, s: number, l: number): string => {
+const hslToHex = (h: number, s: number, l: number): HexObject => {
 	h /= 360
 	s /= 100
 	l /= 100
@@ -126,7 +133,7 @@ const hslToHex = (h: number, s: number, l: number): string => {
 	return { string }
 }
 
-const hexToCmyk = (hex: string) => {
+const hexToCmyk = (hex: string): CMYKObject => {
 	// Remove the hash if it exists
 	hex = _scrubHex(hex)
 
@@ -168,9 +175,9 @@ const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void =
 	if (!hue && !hex) return
 	hue = typeof hue === 'string' ? parseInt(hue) : hue
 
-	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex).string
+	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex as string).string
 
-	hex = hex ? hex : hslToHex(hue, 100, 50).string
+	hex = hex ? hex : hslToHex(hue as number, 100, 50).string
 
 	const rgb = hex ? hexToRgb(hex).string : hslToRgb(hue as number, 100, 50).string
 
