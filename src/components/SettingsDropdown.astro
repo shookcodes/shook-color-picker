@@ -12,10 +12,10 @@ import { Icon } from 'astro-icon/components'
 	<ol
 		aria-hidden="true"
 		class="settings-dropdown pointer-events-none transition-all opacity-0 duration-300">
-		<li class="settings-dropdown-li">Display hex</li>
-		<li class="settings-dropdown-li">Display RGB</li>
-		<li class="settings-dropdown-li">Display HSL</li>
-		<li class="settings-dropdown-li">Display CMYK</li>
+		<li class="settings-dropdown-li">Hex</li>
+		<li class="settings-dropdown-li">RGB</li>
+		<li class="settings-dropdown-li">HSL</li>
+		<li class="settings-dropdown-li">CMYK</li>
 	</ol>
 </settings-menu>
 
@@ -55,12 +55,12 @@ import { Icon } from 'astro-icon/components'
 
 <style lang="scss">
 	.settings-dropdown-wrapper {
-		@apply relative flex items-center justify-end;
+		@apply relative flex w-full items-center justify-end;
 	}
 
 	.settings-dropdown {
 		z-index: -1;
-		@apply absolute top-0 mt-5 flex flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
+		@apply absolute bottom-0 mb-6 flex w-full flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
 	}
 
 	.settings-dropdown-li {
