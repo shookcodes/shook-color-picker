@@ -15,6 +15,7 @@ function _scrubHex(hex: string) {
 }
 
 const hexToRgb = (hex: string): RGBObject => {
+	if (!hex) return
 	hex = '0x' + _scrubHex(hex)
 
 	const bigint = parseInt(hex, 16)
@@ -29,6 +30,7 @@ const hexToRgb = (hex: string): RGBObject => {
 }
 
 const hexToHsl = (hex: string): HSLObject => {
+	if (!hex) return
 	// Remove the hash if it exists
 	hex = hex.replace(/^#/, '')
 
