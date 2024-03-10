@@ -1,4 +1,4 @@
-import type { DrawCanvas, CanvasProps, ColorModels } from '../types'
+import type { DrawCanvas, CanvasProps, ColorModels, ConversionModels } from '../types'
 
 import { updateColorValues } from './convertColor'
 
@@ -7,12 +7,12 @@ const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
 	const width = wrapper.clientWidth
 	const height = wrapper.clientHeight
 
-	const canvas = wrapper.querySelector('canvas')
+	const canvas: HTMLCanvasElement = wrapper.querySelector('canvas')!
 	const marker: HTMLDivElement = wrapper.querySelector('.color-marker')!
 	canvas.width = width
 	canvas.height = height
 
-	const inputs = wrapper.parentElement.querySelectorAll('.color-input')
+	const inputs = wrapper.parentElement!.querySelectorAll('.color-input')
 
 	const ctx = setCanvasGradient({ canvas, width, height, hue })
 

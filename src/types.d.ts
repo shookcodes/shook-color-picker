@@ -18,7 +18,7 @@ export interface Canvas2DSize {
 export interface CanvasProps extends Canvas2DSize {
 	canvas: HTMLCanvasElement
 	hex?: string
-	hue?: string
+	hue?: number
 }
 
 export interface DrawCanvas {

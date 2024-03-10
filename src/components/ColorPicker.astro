@@ -17,30 +17,38 @@ import { Icon } from 'astro-icon/components'
 
 		<canvas id="color-picker-canvas "></canvas>
 	</div>
-	<input type="range" class="color-range" min="0" max="360" aria-label="hue" />
+	<input
+		type="range"
+		class="color-range"
+		min="0"
+		max="360"
+		aria-label="hue"
+		aria-label="update the hue value by sliding the range"
+	/>
+	<div class="selected-color-display border-2 border-black"></div>
 	<div class="color-inputs">
-		<Input type="color" ariaLabel="selected hex code value" title="Hex"
+		<Input type="color" ariaLabel="selected hex code value" title="Hex" id="input-hex"
 			><Button
 				slot="inner-button"
 				ariaLabel="copy the selected hex value"
 				classList="button-icon button-input-copy"><Icon name="copy" /></Button
 			></Input
 		>
-		<Input type="color" ariaLabel="selected RGB code value" title="RGB"
+		<Input type="color" ariaLabel="selected RGB code value" title="RGB" id="input-rgb"
 			><Button
 				slot="inner-button"
 				ariaLabel="copy the selected RGB value"
 				classList="button-icon button-input-copy"><Icon name="copy" /></Button
 			></Input
 		>
-		<Input type="color" ariaLabel="selected HSL code value" title="HSL"
+		<Input type="color" ariaLabel="selected HSL code value" title="HSL" id="input-hsl"
 			><Button
 				slot="inner-button"
 				ariaLabel="copy the selected HSL value"
 				classList="button-icon button-input-copy"><Icon name="copy" /></Button
 			></Input
 		>
-		<Input type="color" ariaLabel="selected CMYK code value" title="CMYK"
+		<Input type="color" ariaLabel="selected CMYK code value" title="CMYK" id="input-cmyk"
 			><Button
 				slot="inner-button"
 				ariaLabel="copy the selected CMYK value"
@@ -279,9 +287,13 @@ import { Icon } from 'astro-icon/components'
 		border: 1px solid #c7c7c7;
 	}
 
+	.selected-color-display {
+		@apply h-14 w-full rounded-md border-t border-neutral-200 pt-6 shadow-sm;
+	}
+
 	.color-inputs {
 		gap: 1.75rem;
-		@apply flex flex-col gap-4 border-t border-neutral-200 pt-6;
+		@apply flex flex-col gap-4;
 	}
 
 	span {
