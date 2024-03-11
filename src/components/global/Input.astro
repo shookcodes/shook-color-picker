@@ -1,9 +1,9 @@
 ---
 const { type = 'color', title, ariaLabel, id } = Astro.props
 
-const wrapperClass = `${type}-label-wrapper`
-const labelClass = `${type}-label`
-const inputClass = `${type}-input`
+const wrapperClass = `${type}-input`
+const labelClass = `${type}-input-label`
+const inputClass = `${type}-input-field`
 ---
 
 <color-picker-input class={wrapperClass}>
@@ -16,7 +16,7 @@ const inputClass = `${type}-input`
 </color-picker-input>
 
 <script>
-	import { copyContent } from '../../utils/clipboard'
+	import { copyContent } from '@utils/clipboard'
 	class ShookColorPickerInput extends HTMLElement {
 		constructor() {
 			super()
@@ -61,11 +61,11 @@ const inputClass = `${type}-input`
 </script>
 
 <style lang="scss">
-	.color-label-wrapper {
+	.color-input {
 		@apply relative;
 	}
 
-	.color-label {
+	.color-input-label {
 		@apply flex flex-col gap-1;
 
 		& span {
@@ -74,7 +74,7 @@ const inputClass = `${type}-input`
 		}
 	}
 
-	.color-input {
+	.color-input-field {
 		border: 1px solid #ccc;
 		z-index: 1;
 		height: 2rem;

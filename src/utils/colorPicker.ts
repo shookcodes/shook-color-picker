@@ -1,4 +1,4 @@
-import type { DrawCanvas, CanvasProps, ColorObject, ConversionModels } from '../types'
+import type { DrawCanvas, CanvasProps, ColorObject } from '../types'
 
 import { updateColorValues } from './convertColor'
 
@@ -13,8 +13,13 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
-	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorObject
-	return { hex, rgb, hsl, cmyk }
+	const color = updateColorValues({ hex: currentHex }) as ColorObject
+
+	const isEmpty = Object.values(color).every((x) => x === null || x === '')
+
+	if (isEmpty) return console.log('No color at current position')
+
+	return { ...color }
 }
 
 // Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
@@ -27,12 +32,7 @@ const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
 	canvas.width = width
 	canvas.height = height
 
-	const inputs = wrapper.parentElement!.querySelectorAll('.color-input') as HTMLInputElement[]
-
 	const ctx = setCanvasGradient({ canvas, width, height, hue })
-
-	// Initialize input values on page load
-	updateInputValues(inputs, { hue })
 
 	return { canvas, ctx, marker }
 }
@@ -73,24 +73,4 @@ const getCursorPoint = (el: HTMLElement, x: number, y: number) => {
 	return { left, top }
 }
 
-const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionModels) => {
-	if (inputs.length === 0 || (!hex && !hue)) {
-		console.log('Error updating input color values')
-		return
-	}
-
-	const colorValues = hex
-		? (updateColorValues({ hex }) as ColorObject)
-		: (updateColorValues({ hue }) as ColorObject)
-	inputs.forEach((input) => {
-		const type = input.id.split('input-')[1] as keyof ColorObject
-		if (!type) return
-
-		if (type && type in colorValues) {
-			input.value = colorValues[type]
-		}
-	})
-	return { ...colorValues }
-}
-
-export { setCanvas, setCanvasGradient, getColorAtPosition, getCursorPoint, updateInputValues }
+export { setCanvas, setCanvasGradient, getColorAtPosition, getCursorPoint }

@@ -1,5 +1,9 @@
 <template>
-	<button :disabled="disabled ? true : false" :aria-label="ariaLabel" :class="className">
+	<button
+		:disabled="disabled ? true : false"
+		:aria-label="ariaLabel"
+		:class="className"
+		@click="$emit('clicked')">
 		<slot />
 	</button>
 </template>
@@ -10,7 +14,12 @@ interface Props {
 	className?: string
 }
 
+interface Emits {
+	(e: 'clicked'): void
+}
+
 defineProps<Props>()
+defineEmits<Emits>()
 </script>
 <style lang="scss">
 @import '../../styles/button.scss';

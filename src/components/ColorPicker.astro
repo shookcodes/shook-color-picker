@@ -4,7 +4,7 @@ import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
 import Button from './global/Button.astro'
 import Tooltip from './global/Tooltip.astro'
-import ColorInputs from './ColorInputs.astro'
+import ColorInputGroup from './ColorInputGroup.vue'
 import Input from './global/Input.astro'
 // import ColorPalette from './ColorPalette.vue'
 
@@ -27,7 +27,7 @@ import { Icon } from 'astro-icon/components'
 
 		<div class="selected-colors-group">
 			<ActiveColor client:only="vue" />
-			<ColorInputs />
+			<ColorInputGroup client:only="vue" />
 
 			<!-- <ColorPalette /> -->
 		</div>
@@ -39,9 +39,10 @@ import { Icon } from 'astro-icon/components'
 	import {
 		setCanvas,
 		getColorAtPosition,
-		getCursorPoint,
-		updateInputValues
-	} from '@/utils/colorPicker'
+		getCursorPoint
+		// updateInputValues
+	} from '@utils/colorPicker'
+	import { updateColorValues } from '@utils/convertColor'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -55,9 +56,16 @@ import { Icon } from 'astro-icon/components'
 
 			const colorInputs = this.querySelectorAll('.color-input')
 
-			const { canvas, ctx, marker } = setCanvas({ wrapper, hue: slider.value })
+			const { canvas, ctx, marker, color } = setCanvas({ wrapper, hue: slider.value })
 
-			canvas.addEventListener('load', this.classList.remove('opacity-0'))
+			const initialize = () => {
+				this.classList.remove('opacity-0')
+
+				// Set the current color in the store based on the slider position.
+				setCurrentColor(updateColorValues({ hue: slider.value }))
+			}
+
+			canvas.addEventListener('load', initialize())
 
 			const handleCanvasClick = (e: MouseEvent) => {
 				const hex = tooltipText.innerText
@@ -74,8 +82,8 @@ import { Icon } from 'astro-icon/components'
 				marker.style.left = `${left - 4}px`
 				marker.style.top = `${top - 4}px`
 
-				const color = updateInputValues(colorInputs, { hex })
-
+				// Get color object based on hex value and set the new object to the store.
+				const color = updateColorValues({ hex })
 				setCurrentColor(color)
 			}
 

@@ -14,7 +14,7 @@ function _scrubHex(hex: string) {
 	return hex
 }
 
-const hexToRgb = (hex: string): RGBObject => {
+const hexToRgb = (hex: string): RGBObject | void => {
 	if (!hex) return
 	hex = '0x' + _scrubHex(hex)
 
@@ -29,7 +29,7 @@ const hexToRgb = (hex: string): RGBObject => {
 	return { string, arr: [r, g, b] }
 }
 
-const hexToHsl = (hex: string): HSLObject => {
+const hexToHsl = (hex: string): HSLObject | void => {
 	if (!hex) return
 	// Remove the hash if it exists
 	hex = hex.replace(/^#/, '')
@@ -175,17 +175,25 @@ const hexToCmyk = (hex: string): CMYKObject => {
 
 const updateColorValues = ({ hue, hex }: ConversionModels): ColorObject | void => {
 	if (!hue && !hex) return
-	hue = typeof hue === 'string' ? parseInt(hue) : hue
 
-	const hsl = hue ? `hsl(${hue}, ${100}, ${50})` : hexToHsl(hex as string).string
+	const colorObj = { hsl: '', hex: '', rgb: '', cmyk: '' }
 
-	hex = hex ? hex : hslToHex(hue as number, 100, 50).string
+	if (hue) {
+		hue = typeof hue === 'string' ? parseInt(hue) : hue
+		colorObj.hsl = `hsl(${hue}, ${100}, ${50})`
+		colorObj.hex = hslToHex(hue, 100, 50).string
+		colorObj.rgb = hslToRgb(hue as number, 100, 50).string
+		colorObj.cmyk = hexToCmyk(colorObj.hex).string
+	} else if (hex) {
+		hex = _scrubHex(hex)
 
-	const rgb = hex ? hexToRgb(hex).string : hslToRgb(hue as number, 100, 50).string
+		colorObj.hsl = hexToHsl(hex).string
+		colorObj.hex = `#${hex}`
+		colorObj.rgb = hexToRgb(hex).string
+		colorObj.cmyk = hexToCmyk(hex).string
+	}
 
-	const cmyk = hexToCmyk(hex).string
-
-	return { hex, rgb, hsl, cmyk }
+	return colorObj
 }
 
 export { hslToRgb, hslToHex, hexToHsl, hexToRgb, hexToCmyk, updateColorValues }
