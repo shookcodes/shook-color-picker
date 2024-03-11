@@ -4,7 +4,6 @@ import type { PaletteAction } from './types'
 export const locale = persistentAtom('locale', 'en')
 
 import type { ColorObject } from '../types'
-import type { StoreValue, WritableAtom, WritableStore } from 'nanostores'
 
 export const $currentColor = persistentAtom<ColorObject>(
 	'activeColor',
@@ -15,7 +14,7 @@ export const $currentColor = persistentAtom<ColorObject>(
 	}
 )
 
-export const updateCurrentColor = (color: ColorObject) => {
+export const setCurrentColor = (color: ColorObject) => {
 	$currentColor.set({ ...color })
 }
 

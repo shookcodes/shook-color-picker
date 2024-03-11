@@ -63,7 +63,7 @@ import { Icon } from 'astro-icon/components'
 </color-picker>
 
 <script>
-	import { $currentColor, updateCurrentColor } from '../store/colors'
+	import { $currentColor, setCurrentColor } from '../store/colors'
 	import {
 		setCanvas,
 		getColorAtPosition,
@@ -104,7 +104,7 @@ import { Icon } from 'astro-icon/components'
 
 				const color = updateInputValues(colorInputs, { hex })
 
-				updateCurrentColor(color)
+				setCurrentColor(color)
 			}
 
 			canvas.addEventListener('click', (e) => {
