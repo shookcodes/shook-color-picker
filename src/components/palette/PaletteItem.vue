@@ -1,16 +1,17 @@
 <template>
-	<div class="palette-item"></div>
+	<button class="palette-item" :style="{ background: color.hex }"></button>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from '@nanostores/vue'
-import { $colorPalette } from '@/store/colors'
-const paletteColors = useStore($colorPalette)
+import type { ColorObject } from '@/types'
 
-const palette = computed(() => paletteColors.value)
+interface Props {
+	color: ColorObject
+}
+
+defineProps<Props>()
 </script>
 <style scoped lang="scss">
-.paletteItem {
-	@apply h-10 w-10;
+.palette-item {
+	@apply aspect-square w-full min-w-[2rem] rounded border-2 border-neutral-50 shadow-md transition-all duration-300 ease-in-out hover:scale-110;
 }
 </style>

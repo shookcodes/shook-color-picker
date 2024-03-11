@@ -1,5 +1,4 @@
 import { persistentAtom } from '@nanostores/persistent'
-import type { PaletteAction } from './types'
 
 export const locale = persistentAtom('locale', 'en')
 
