@@ -1,5 +1,6 @@
 ---
 import MenuBar from './MenuBar.astro'
+import ColorCanvas from './ColorCanvas.astro'
 import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
 import Button from './global/Button.astro'
@@ -14,7 +15,7 @@ import { Icon } from 'astro-icon/components'
 <color-picker id="shook-color-picker" class="shook-color-picker opacity-0 background">
 	<MenuBar />
 	<div class="color-picker-content">
-		<div class="canvas-slider-group">
+		<div class="canvas-with-slider">
 			<div class="canvas-wrapper">
 				<div class="color-marker" aria-label="selected color marker"></div>
 
@@ -53,8 +54,6 @@ import { Icon } from 'astro-icon/components'
 			const slider: HTMLInputElement = this.querySelector('.color-slider')!
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
-
-			const colorInputs = this.querySelectorAll('.color-input')
 
 			const { canvas, ctx, marker, color } = setCanvas({ wrapper, hue: slider.value })
 
@@ -111,7 +110,7 @@ import { Icon } from 'astro-icon/components'
 			z-index: 1;
 		}
 
-		.canvas-slider-group {
+		.canvas-with-slider {
 			@apply flex flex-col gap-3;
 		}
 
