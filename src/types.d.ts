@@ -44,5 +44,3 @@ export interface CMYKObject {
 	string: string
 	arr: [c: number, m: number, y: number, k: number]
 }
-
-declare module './icons'

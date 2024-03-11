@@ -26,6 +26,12 @@
       "@utils/*": [
         "src/utils/*"
       ],
+      "@palette/*": [
+        "src/components/palette/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
       "@pages/*": [
         "src/pages/*"
       ],
