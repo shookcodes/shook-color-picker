@@ -2,7 +2,11 @@
 	<div class="palette">
 		<div class="palette-colors">
 			<div v-for="(color, index) in palette">
-				<PaletteItem :color="color" :key="index" />
+				<PaletteItem
+					:color="color"
+					:key="index"
+					:id="color.hex.split('#')[1]"
+					@click="(value: ColorObject) => updateSelectedColors(value)" />
 			</div>
 		</div>
 		<div class="palette-actions">
@@ -16,15 +20,28 @@
 	</div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
 import { $colorPalette } from '@store/colors'
 import { useStore } from '@nanostores/vue'
+import type { ColorObject } from '@/types'
 
 const palette = useStore($colorPalette)
 
-const selected = ref([])
+const selected: ColorObject[] = []
+
+const updateSelectedColors = (color: ColorObject) => {
+	const found = selected.findIndex((match: ColorObject) => match?.hex === color.hex)
+
+	if (found === -1) {
+		selected.push(color)
+		return selected
+	}
+
+	selected.splice(found, 1)
+
+	return selected
+}
 </script>
 
 <style lang="scss" scoped>
@@ -34,7 +51,8 @@ const selected = ref([])
 	@apply flex flex-col gap-5;
 
 	.palette-colors {
-		@apply mt-2 grid grid-cols-6 gap-3;
+		z-index: 1;
+		@apply mt-2 grid grid-cols-6 gap-2.5;
 	}
 
 	.palette-actions {

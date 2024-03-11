@@ -32,12 +32,8 @@ interface Props {
 	id: string
 	color?: string
 }
-interface Emits {
-	(e: 'click'): void
-}
 
 const { color } = defineProps<Props>()
-defineEmits<Emits>()
 
 const input = ref()
 
