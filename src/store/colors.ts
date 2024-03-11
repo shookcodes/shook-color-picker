@@ -1,13 +1,10 @@
 import { persistentAtom } from '@nanostores/persistent'
+import type { PaletteAction } from './types'
 
 export const locale = persistentAtom('locale', 'en')
 
 import type { ColorObject } from '../types'
-
-export const $colorPalette = persistentAtom<ColorObject[]>('colors', [], {
-	encode: JSON.stringify,
-	decode: JSON.parse
-})
+import type { StoreValue, WritableAtom, WritableStore } from 'nanostores'
 
 export const $currentColor = persistentAtom<ColorObject>(
 	'activeColor',
@@ -20,4 +17,24 @@ export const $currentColor = persistentAtom<ColorObject>(
 
 export const updateCurrentColor = (color: ColorObject) => {
 	$currentColor.set({ ...color })
+}
+
+export const $colorPalette = persistentAtom<ColorObject[]>('colors', [], {
+	encode: JSON.stringify,
+	decode: JSON.parse
+})
+
+export const updatePalette = {
+	add: () => {
+		const { hex } = $currentColor.get()
+		const palette = $colorPalette.get()
+
+		const found = palette.find((match) => match.hex === hex)
+
+		if (found) {
+			return 'duplicate'
+		}
+
+		$colorPalette.set([...palette, $currentColor.get()])
+	}
 }
