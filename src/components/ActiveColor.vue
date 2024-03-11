@@ -2,16 +2,16 @@
 	<div class="active-color-wrapper">
 		<div class="active-color-preview" :style="{ background: hex }"></div>
 		<Button
-			disabled
+			:disabled="disabled"
 			ariaLabel="add the color to the color palette"
-			classList="button-add-active-color "
+			className="button-add-active-color "
 			>Add Color
 			<AddSvg />
 		</Button>
 	</div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import Button from '../components/global/Button.vue'
 import AddSvg from '../icons/add.svg?component'
 import { useStore } from '@nanostores/vue'
@@ -21,6 +21,8 @@ interface Props {}
 const color = useStore($currentColor)
 
 const hex = computed(() => color.value.hex)
+
+const disabled = computed(() => (hex.value ? false : true))
 </script>
 <style lang="scss" scoped>
 .active-color-wrapper {
