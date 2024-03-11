@@ -12,7 +12,7 @@
 			</Button>
 			<span
 				ref="errorSpan"
-				class="active-color-message"
+				class="active-color-message error-text"
 				:class="error ? 'opacity-1' : 'opacity-0'"
 				aria-disabled="true"
 				>Color already on palette</span
@@ -60,7 +60,6 @@ const addColorToPalette = () => {
 }
 
 .active-color-message {
-	color: $error;
 	@apply absolute -bottom-4 w-full text-center text-sm font-semibold transition-opacity;
 }
 

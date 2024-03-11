@@ -36,10 +36,10 @@ const inputClass = `${type}-input`
 					const copied = await copyContent(text)
 
 					if (copied) {
-						messageSpan.classList.add('message-ok')
+						messageSpan.classList.add('success-text')
 						messageSpan.innerText = 'Copied!'
 					} else {
-						messageSpan.classList.add('message-error')
+						messageSpan.classList.add('error-text')
 						messageSpan.innerText = 'Error copying'
 					}
 					messageSpan.classList.remove('opacity-0')
@@ -48,7 +48,7 @@ const inputClass = `${type}-input`
 					}, 3000)
 
 					setTimeout(() => {
-						messageSpan.classList.remove('message-ok', 'message-error')
+						messageSpan.classList.remove('error-text', 'success-text')
 						messageSpan.innerText = ''
 					}, 4000)
 				}
@@ -87,13 +87,5 @@ const inputClass = `${type}-input`
 
 		@apply absolute right-0 top-12 z-10 mt-1.5 text-sm
 			font-semibold;
-
-		&.message-ok {
-			@apply text-green-600;
-		}
-
-		&.message-error {
-			@apply text-red-600;
-		}
 	}
 </style>
