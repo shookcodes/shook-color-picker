@@ -21,7 +21,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import Button from '../components/global/Button.vue'
 import AddSvg from '../icons/add.svg?component'
 import { useStore } from '@nanostores/vue'

@@ -2,6 +2,21 @@ import type { DrawCanvas, CanvasProps, ColorObject, ConversionModels } from '../
 
 import { updateColorValues } from './convertColor'
 
+const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+	if (!ctx || !x || !y) return
+	const imageData = ctx.getImageData(x, y, 1, 1).data
+
+	const toHex = (value: number) => {
+		const hex = value.toString(16)
+		return hex.length === 1 ? '0' + hex : hex
+	}
+
+	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
+
+	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorObject
+	return { hex, rgb, hsl, cmyk }
+}
+
 // Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
 const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
 	const width = wrapper.clientWidth
@@ -47,22 +62,7 @@ const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
 	return ctx
 }
 
-const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-	if (!ctx || !x || !y) return
-	const imageData = ctx.getImageData(x, y, 1, 1).data
-
-	const toHex = (value: number) => {
-		const hex = value.toString(16)
-		return hex.length === 1 ? '0' + hex : hex
-	}
-
-	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
-
-	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorObject
-	return { hex, rgb, hsl, cmyk }
-}
-
-const getCursorPoint = (el, x, y) => {
+const getCursorPoint = (el: HTMLElement, x: number, y: number) => {
 	if (!x || !y) return
 	const bounds = el.getBoundingClientRect()
 
