@@ -4,8 +4,9 @@ import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
 import Button from './global/Button.astro'
 import Tooltip from './global/Tooltip.astro'
+import ColorInputs from './ColorInputs.astro'
 import Input from './global/Input.astro'
-import ColorPalette from './ColorPalette.vue'
+// import ColorPalette from './ColorPalette.vue'
 
 import { Icon } from 'astro-icon/components'
 ---
@@ -26,38 +27,9 @@ import { Icon } from 'astro-icon/components'
 
 		<div class="selected-colors-group">
 			<ActiveColor client:only="vue" />
+			<ColorInputs />
 
-			<div class="color-inputs">
-				<Input type="color" ariaLabel="selected hex code value" title="Hex" id="input-hex"
-					><Button
-						slot="inner-button"
-						ariaLabel="copy the selected hex value"
-						className="button-icon button-input-copy"><Icon name="copy" /></Button
-					></Input
-				>
-				<Input type="color" ariaLabel="selected RGB code value" title="RGB" id="input-rgb"
-					><Button
-						slot="inner-button"
-						ariaLabel="copy the selected RGB value"
-						className="button-icon button-input-copy"><Icon name="copy" /></Button
-					></Input
-				>
-				<Input type="color" ariaLabel="selected HSL code value" title="HSL" id="input-hsl"
-					><Button
-						slot="inner-button"
-						ariaLabel="copy the selected HSL value"
-						className="button-icon button-input-copy"><Icon name="copy" /></Button
-					></Input
-				>
-				<Input type="color" ariaLabel="selected CMYK code value" title="CMYK" id="input-cmyk"
-					><Button
-						slot="inner-button"
-						ariaLabel="copy the selected CMYK value"
-						className="button-icon button-input-copy"><Icon name="copy" /></Button
-					></Input
-				>
-			</div>
-			<ColorPalette />
+			<!-- <ColorPalette /> -->
 		</div>
 	</div>
 </color-picker>
@@ -117,7 +89,7 @@ import { Icon } from 'astro-icon/components'
 </script>
 
 <style lang="scss">
-	@import '../styles/index.scss';
+	@import '../styles/variables.scss';
 	.shook-color-picker {
 		display: flex;
 		flex-direction: column;
@@ -147,12 +119,11 @@ import { Icon } from 'astro-icon/components'
 
 		.color-marker {
 			position: absolute;
-			// z-index: 2;
 			display: none;
 			width: 8px;
 			height: 8px;
 			top: 0;
-			left: 0;
+			right: 0;
 			caret-color: transparent;
 			border-radius: 100%;
 			background: #000000;
@@ -160,11 +131,6 @@ import { Icon } from 'astro-icon/components'
 
 		.selected-colors-group {
 			@apply flex flex-col gap-2;
-		}
-
-		.color-inputs {
-			gap: 1.75rem;
-			@apply flex flex-col gap-4;
 		}
 
 		span {
