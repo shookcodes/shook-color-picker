@@ -69,7 +69,7 @@ const copyInputValue = async () => {
 }
 
 .color-input-label {
-	@apply flex flex-col gap-1;
+	@apply flex flex-col gap-0.5;
 
 	& span {
 		caret-color: transparent;
@@ -80,9 +80,10 @@ const copyInputValue = async () => {
 .color-input-field {
 	border: 1px solid #ccc;
 	z-index: 1;
-	height: 2rem;
+	height: 1.8rem;
 	padding: 0 0.5rem;
 	border-radius: 6px;
+	font-size: 0.95rem;
 }
 
 .message-span {

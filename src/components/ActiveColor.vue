@@ -52,7 +52,7 @@ const addColorToPalette = () => {
 <style lang="scss" scoped>
 @import '../styles/variables.scss';
 .active-color {
-	@apply relative border-t border-neutral-300 py-2;
+	@apply relative;
 }
 
 .active-color-grid {

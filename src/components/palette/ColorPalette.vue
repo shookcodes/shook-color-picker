@@ -34,7 +34,7 @@ const selected = ref([])
 	@apply flex flex-col gap-5;
 
 	.palette-colors {
-		@apply mt-4 grid grid-cols-6 gap-3;
+		@apply mt-2 grid grid-cols-6 gap-3;
 	}
 
 	.palette-actions {
