@@ -1,7 +1,7 @@
 ---
-const { classList, ariaLabel, disabled } = Astro.props
+const { className, ariaLabel, disabled } = Astro.props
 ---
 
-<button disabled={disabled ? true : false} aria-label={ariaLabel} class={classList}
+<button disabled={disabled ? true : false} aria-label={ariaLabel} class={className}
 	><slot />
 </button>

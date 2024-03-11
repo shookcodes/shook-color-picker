@@ -14,26 +14,28 @@ import '../styles/index.scss'
 	<body>
 		<ColorPicker />
 	</body>
-</html>
-<style lang="scss" is:global>
-	html {
-		@apply flex justify-center;
-	}
-	body {
-		// z-index: 0;
-		@apply relative min-h-screen w-full bg-neutral-400 pt-12;
 
-		&:after {
-			content: '';
-			z-index: -1;
-			background: url('/img/bg.jpg');
-			// background-size: cover;
-			background-size: 120vw 120vh;
-			background-attachment: scroll;
-			opacity: 0.7;
-			filter: brightness(0.8);
-			@apply absolute inset-0 h-full w-full;
+	<style lang="scss" is:global>
+		html {
+			@apply flex justify-center;
 		}
-	}
-	// Background photo by <a href="https://unsplash.com/@codioful?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Codioful (Formerly Gradienta)</a> on <a href="https://unsplash.com/photos/blue-and-pink-light-illustration-LeG68PrXA6Y?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-</style>
+		body {
+			@apply relative min-h-screen w-full bg-neutral-400 pt-16;
+
+			&:after {
+				content: '';
+				z-index: -1;
+				background: url('/img/bg.jpg');
+				// background-size: cover;
+				background-size: 120vw 120vh;
+				background-attachment: scroll;
+				opacity: 0.7;
+				filter: brightness(0.8);
+				@apply absolute inset-0 h-full w-full;
+			}
+		}
+		// Background photo by <a href="https://unsplash.com/@codioful?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Codioful (Formerly Gradienta)</a> on <a href="https://unsplash.com/photos/blue-and-pink-light-illustration-LeG68PrXA6Y?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+	</style>
+
+
+</html>

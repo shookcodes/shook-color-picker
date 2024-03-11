@@ -1,12 +1,12 @@
 ---
-import Button from './global/Button.astro'
+import Button from '../global/Button.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
 <settings-menu class="settings-dropdown-wrapper">
 	<Button
 		ariaLabel="click to toggle color picker settings"
-		classList="settings-button button-icon place-self-end"><Icon name="settings" /></Button
+		className="button-menu-bar settings-button"><Icon name="settings" /></Button
 	>
 
 	<ol
@@ -28,8 +28,8 @@ import { Icon } from 'astro-icon/components'
 			const settingsDropdown: HTMLOListElement = this.querySelector('.settings-dropdown')
 
 			const toggleSettingsDropdown = () => {
-				if (settingsDropdown.classList.contains('opacity-0')) {
-					settingsDropdown.style.zIndex = '5'
+				if (settingsDropdown.className.includes('opacity-0')) {
+					settingsDropdown.style.zIndex = '15'
 
 					return setTimeout(() => {
 						settingsDropdown.classList.remove('opacity-0', 'pointer-events-none')
@@ -59,8 +59,8 @@ import { Icon } from 'astro-icon/components'
 	}
 
 	.settings-dropdown {
-		z-index: -1;
-		@apply absolute bottom-0 mb-6 flex w-full flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
+		// z-index: -1;
+		@apply absolute top-0 mt-6 flex w-max flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
 	}
 
 	.settings-dropdown-li {

@@ -1,16 +1,18 @@
 ---
+import MenuBar from './MenuBar.astro'
 import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
-import SettingsDropdown from './SettingsDropdown.astro'
 import Button from './global/Button.astro'
 import Tooltip from './global/Tooltip.astro'
 import Input from './global/Input.astro'
+import ColorPalette from './ColorPalette.vue'
 
 import { Icon } from 'astro-icon/components'
 ---
 
-<color-picker id="shook-color-picker" class="shook-color-picker opacity-0">
-	<div class="relative z-10">
+<color-picker id="shook-color-picker" class="shook-color-picker opacity-0 background">
+	<MenuBar />
+	<div class="color-picker-content">
 		<div class="canvas-slider-group">
 			<div class="canvas-wrapper">
 				<div class="color-marker" aria-label="selected color marker"></div>
@@ -19,7 +21,7 @@ import { Icon } from 'astro-icon/components'
 
 				<canvas id="shook-color-picker-canvas"></canvas>
 			</div>
-			<ColorSlider className="border-b border-neutral-200 pb-1" />
+			<ColorSlider className="border-b border-neutral-200" />
 		</div>
 
 		<div class="selected-colors-group">
@@ -30,33 +32,33 @@ import { Icon } from 'astro-icon/components'
 					><Button
 						slot="inner-button"
 						ariaLabel="copy the selected hex value"
-						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+						className="button-icon button-input-copy"><Icon name="copy" /></Button
 					></Input
 				>
 				<Input type="color" ariaLabel="selected RGB code value" title="RGB" id="input-rgb"
 					><Button
 						slot="inner-button"
 						ariaLabel="copy the selected RGB value"
-						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+						className="button-icon button-input-copy"><Icon name="copy" /></Button
 					></Input
 				>
 				<Input type="color" ariaLabel="selected HSL code value" title="HSL" id="input-hsl"
 					><Button
 						slot="inner-button"
 						ariaLabel="copy the selected HSL value"
-						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+						className="button-icon button-input-copy"><Icon name="copy" /></Button
 					></Input
 				>
 				<Input type="color" ariaLabel="selected CMYK code value" title="CMYK" id="input-cmyk"
 					><Button
 						slot="inner-button"
 						ariaLabel="copy the selected CMYK value"
-						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+						className="button-icon button-input-copy"><Icon name="copy" /></Button
 					></Input
 				>
 			</div>
+			<ColorPalette />
 		</div>
-		<SettingsDropdown />
 	</div>
 </color-picker>
 
@@ -67,7 +69,7 @@ import { Icon } from 'astro-icon/components'
 		getColorAtPosition,
 		getCursorPoint,
 		updateInputValues
-	} from '../utils/colorPicker'
+	} from '@/utils/colorPicker'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -119,66 +121,54 @@ import { Icon } from 'astro-icon/components'
 	.shook-color-picker {
 		display: flex;
 		flex-direction: column;
-		// gap: 0.2rem;
-
-		box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
 		max-width: 280px;
-		background: transparent;
-
 		width: max-content;
 		transition: all 0.2s ease-in;
 		z-index: 1;
-		@apply relative mx-auto rounded-md pb-2;
+		@apply relative mx-auto rounded-md;
 
-		&::after {
-			content: '';
-			background: $pickerBg;
-			opacity: 0.75;
-			z-index: 0;
-			@apply absolute inset-0 h-full w-full rounded-md;
+		.color-picker-content {
+			z-index: 1;
 		}
-	}
 
-	.canvas-slider-group {
-		padding: 1rem 0.8rem 0 0.8rem;
+		.canvas-slider-group {
+			@apply flex flex-col gap-3;
+		}
 
-		@apply flex flex-col gap-3;
-	}
+		.canvas-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			max-height: 200px;
 
-	.canvas-wrapper {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		max-height: 200px;
+			outline: 1px solid #e6e6e6;
+			border-radius: 0.2rem;
+		}
 
-		outline: 1px solid #e6e6e6;
-		border-radius: 0.2rem;
-	}
+		.color-marker {
+			position: absolute;
+			// z-index: 2;
+			display: none;
+			width: 8px;
+			height: 8px;
+			top: 0;
+			left: 0;
+			caret-color: transparent;
+			border-radius: 100%;
+			background: #000000;
+		}
 
-	.color-marker {
-		position: absolute;
-		z-index: 2;
-		display: none;
-		width: 8px;
-		height: 8px;
-		top: 0;
-		left: 0;
-		caret-color: transparent;
-		border-radius: 100%;
-		background: #000000;
-	}
+		.selected-colors-group {
+			@apply flex flex-col gap-2;
+		}
 
-	.selected-colors-group {
-		padding: 0 0.8rem;
-		@apply flex flex-col gap-2;
-	}
+		.color-inputs {
+			gap: 1.75rem;
+			@apply flex flex-col gap-4;
+		}
 
-	.color-inputs {
-		gap: 1.75rem;
-		@apply flex flex-col gap-4;
-	}
-
-	span {
-		@apply text-neutral-700;
+		span {
+			@apply text-neutral-700;
+		}
 	}
 </style>

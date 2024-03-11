@@ -1,5 +1,5 @@
 <template>
-	<button :disabled="disabled ? true : false" :aria-label="ariaLabel" :class="classList">
+	<button :disabled="disabled ? true : false" :aria-label="ariaLabel" :class="className">
 		<slot />
 	</button>
 </template>
@@ -7,8 +7,11 @@
 interface Props {
 	ariaLabel: string
 	disabled?: boolean
-	classList?: string
+	className?: string
 }
 
 defineProps<Props>()
 </script>
+<style lang="scss">
+@import '../../styles/button.scss';
+</style>
