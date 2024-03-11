@@ -8,3 +8,33 @@
 :root {
 	@apply text-neutral-600;
 }
+
+svg {
+	@apply m-0 p-0;
+}
+
+body > * {
+	@apply m-0 p-0;
+}
+
+.background {
+	padding: 1rem;
+	box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
+	@apply relative bg-transparent;
+	&::after {
+		content: '';
+		background: $pickerBg;
+		opacity: 0.75;
+		z-index: -1;
+		@apply absolute inset-0 h-full w-full rounded-md;
+	}
+	& .background-small {
+		padding: 2px;
+
+		&::after {
+			content: '';
+
+			@apply rounded;
+		}
+	}
+}
