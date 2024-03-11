@@ -13,16 +13,21 @@ const { className } = Astro.props
 	/>
 </color-slider>
 <script>
-	import { setCanvas } from '../utils/colorPicker'
+	import { setCanvas } from '@utils/colorPicker'
+	import { updateColorValues } from '@utils/convertColor'
+	import { setCurrentColor } from '@store/colors'
+
 	class ShookColorSlider extends HTMLElement {
 		constructor() {
 			super()
 
 			const wrapper = document.querySelector('.canvas-wrapper')!
-			// Update the canvas gradients when the color slider  is updated
+			// Update the canvas gradients and set current color in store when the color slider  is updated
 			const handleSliderUpdate = (e: MouseEvent) => {
 				const hue = e.target.value
 				setCanvas({ wrapper, hue })
+				const color = updateColorValues({ hue })
+				setCurrentColor(color)
 			}
 
 			const slider = this.querySelector('.color-slider')
