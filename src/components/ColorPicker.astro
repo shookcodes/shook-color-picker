@@ -1,4 +1,6 @@
 ---
+import ColorSlider from './ColorSlider.astro'
+import ActiveColor from './ActiveColor.vue'
 import SettingsDropdown from './SettingsDropdown.astro'
 import Button from './global/Button.astro'
 import Tooltip from './global/Tooltip.astro'
@@ -8,56 +10,58 @@ import { Icon } from 'astro-icon/components'
 ---
 
 <color-picker id="shook-color-picker" class="shook-color-picker opacity-0">
-	<SettingsDropdown />
-	<div class="canvas-wrapper">
-		<div class="color-marker" aria-label="selected color marker"></div>
+	<div class="relative z-10">
+		<div class="canvas-slider-group">
+			<div class="canvas-wrapper">
+				<div class="color-marker" aria-label="selected color marker"></div>
 
-		<Tooltip />
+				<Tooltip />
 
-		<canvas id="shook-color-picker-canvas"></canvas>
-	</div>
-	<input
-		type="range"
-		class="color-range"
-		min="1"
-		max="360"
-		aria-label="hue"
-		aria-label="update the hue value by sliding the range"
-	/>
-	<div class="selected-color-display border-2 border-black"></div>
-	<div class="color-inputs">
-		<Input type="color" ariaLabel="selected hex code value" title="Hex" id="input-hex"
-			><Button
-				slot="inner-button"
-				ariaLabel="copy the selected hex value"
-				classList="button-icon button-input-copy"><Icon name="copy" /></Button
-			></Input
-		>
-		<Input type="color" ariaLabel="selected RGB code value" title="RGB" id="input-rgb"
-			><Button
-				slot="inner-button"
-				ariaLabel="copy the selected RGB value"
-				classList="button-icon button-input-copy"><Icon name="copy" /></Button
-			></Input
-		>
-		<Input type="color" ariaLabel="selected HSL code value" title="HSL" id="input-hsl"
-			><Button
-				slot="inner-button"
-				ariaLabel="copy the selected HSL value"
-				classList="button-icon button-input-copy"><Icon name="copy" /></Button
-			></Input
-		>
-		<Input type="color" ariaLabel="selected CMYK code value" title="CMYK" id="input-cmyk"
-			><Button
-				slot="inner-button"
-				ariaLabel="copy the selected CMYK value"
-				classList="button-icon button-input-copy"><Icon name="copy" /></Button
-			></Input
-		>
+				<canvas id="shook-color-picker-canvas"></canvas>
+			</div>
+			<ColorSlider className="border-b border-neutral-200 pb-1" />
+		</div>
+
+		<div class="selected-colors-group">
+			<ActiveColor client:only="vue" />
+
+			<div class="color-inputs">
+				<Input type="color" ariaLabel="selected hex code value" title="Hex" id="input-hex"
+					><Button
+						slot="inner-button"
+						ariaLabel="copy the selected hex value"
+						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+					></Input
+				>
+				<Input type="color" ariaLabel="selected RGB code value" title="RGB" id="input-rgb"
+					><Button
+						slot="inner-button"
+						ariaLabel="copy the selected RGB value"
+						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+					></Input
+				>
+				<Input type="color" ariaLabel="selected HSL code value" title="HSL" id="input-hsl"
+					><Button
+						slot="inner-button"
+						ariaLabel="copy the selected HSL value"
+						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+					></Input
+				>
+				<Input type="color" ariaLabel="selected CMYK code value" title="CMYK" id="input-cmyk"
+					><Button
+						slot="inner-button"
+						ariaLabel="copy the selected CMYK value"
+						classList="button-icon button-input-copy"><Icon name="copy" /></Button
+					></Input
+				>
+			</div>
+		</div>
+		<SettingsDropdown />
 	</div>
 </color-picker>
 
 <script>
+	import { $currentColor, updateCurrentColor } from '../store/colors'
 	import {
 		setCanvas,
 		getColorAtPosition,
@@ -71,21 +75,15 @@ import { Icon } from 'astro-icon/components'
 
 			const wrapper: HTMLDivElement = this.querySelector('.canvas-wrapper')!
 
-			const range: HTMLInputElement = this.querySelector('.color-range')!
+			const slider: HTMLInputElement = this.querySelector('.color-slider')!
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 
 			const colorInputs = this.querySelectorAll('.color-input')
 
-			const { canvas, ctx, marker } = setCanvas({ wrapper, hue: range.value })
+			const { canvas, ctx, marker } = setCanvas({ wrapper, hue: slider.value })
 
 			canvas.addEventListener('load', this.classList.remove('opacity-0'))
-
-			// Update the canvas gradients when the color slider range is updated
-			const handleRangeUpdate = (e: MouseEvent) => {
-				const hue = e.target.value
-				setCanvas({ wrapper, hue })
-			}
 
 			const handleCanvasClick = (e: MouseEvent) => {
 				const hex = tooltipText.innerText
@@ -102,13 +100,14 @@ import { Icon } from 'astro-icon/components'
 				marker.style.left = `${left - 4}px`
 				marker.style.top = `${top - 4}px`
 
-				updateInputValues(colorInputs, { hex })
+				const color = updateInputValues(colorInputs, { hex })
+
+				updateCurrentColor(color)
 			}
 
 			canvas.addEventListener('click', (e) => {
 				handleCanvasClick(e)
 			})
-			range.addEventListener('input', handleRangeUpdate)
 		}
 	}
 
@@ -116,17 +115,34 @@ import { Icon } from 'astro-icon/components'
 </script>
 
 <style lang="scss">
+	@import '../styles/index.scss';
 	.shook-color-picker {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem 1.5rem 1rem;
-		border-radius: 0.75rem;
+		// gap: 0.2rem;
+
 		box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
 		max-width: 280px;
-		background: #f9f9f9;
+		background: transparent;
+
 		width: max-content;
 		transition: all 0.2s ease-in;
+		z-index: 1;
+		@apply relative mx-auto rounded-md pb-2;
+
+		&::after {
+			content: '';
+			background: $pickerBg;
+			opacity: 0.75;
+			z-index: 0;
+			@apply absolute inset-0 h-full w-full rounded-md;
+		}
+	}
+
+	.canvas-slider-group {
+		padding: 1rem 0.8rem 0 0.8rem;
+
+		@apply flex flex-col gap-3;
 	}
 
 	.canvas-wrapper {
@@ -136,62 +152,7 @@ import { Icon } from 'astro-icon/components'
 		max-height: 200px;
 
 		outline: 1px solid #e6e6e6;
-		border-radius: 0.25rem;
-	}
-
-	.color-range {
-		width: 100%;
-		-webkit-appearance: none;
-		appearance: none;
-		width: 100%;
-		height: 0.5rem;
-		border-radius: 2rem;
-		margin: 0.5rem 0;
-		// Rainbow colors for slider
-		background: linear-gradient(
-			90deg,
-			#ff0000,
-			#ff4000,
-			#ff8000,
-			#ffbf00,
-			#ffff00,
-			#bfff00,
-			#80ff00,
-			#40ff00,
-			#00ff00,
-			#00ff40,
-			#00ff80,
-			#00ffbf,
-			#00ffff,
-			#00bfff,
-			#0080ff,
-			#0040ff,
-			#0000ff,
-			#4000ff,
-			#8000ff,
-			#bf00ff,
-			#ff00ff,
-			#ff00bf,
-			#ff0080,
-			#ff0040,
-			#ff0000
-		);
-		outline: none;
-		-webkit-transition: 0.2s;
-		transition: opacity 0.2s;
-
-		&::-webkit-slider-thumb,
-		&::-moz-range-thumb {
-			appearance: none;
-			-webkit-appearance: none;
-			-moz-appearance: none;
-
-			border: 1px solid #000;
-			width: 0.8rem;
-			height: 0.8rem;
-			border-radius: 100%;
-			background: transparent;
-		}
+		border-radius: 0.2rem;
 	}
 
 	.color-marker {
@@ -207,8 +168,9 @@ import { Icon } from 'astro-icon/components'
 		background: #000000;
 	}
 
-	.selected-color-display {
-		@apply h-14 w-full rounded-md border-t border-neutral-200 pt-6 shadow-sm;
+	.selected-colors-group {
+		padding: 0 0.8rem;
+		@apply flex flex-col gap-2;
 	}
 
 	.color-inputs {

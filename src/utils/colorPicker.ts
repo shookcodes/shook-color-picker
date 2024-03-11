@@ -1,4 +1,4 @@
-import type { DrawCanvas, CanvasProps, ColorModels, ConversionModels } from '../types'
+import type { DrawCanvas, CanvasProps, ColorObject, ConversionModels } from '../types'
 
 import { updateColorValues } from './convertColor'
 
@@ -58,7 +58,7 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
-	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorModels
+	const { hex, rgb, hsl, cmyk } = updateColorValues({ hex: currentHex }) as ColorObject
 	return { hex, rgb, hsl, cmyk }
 }
 
@@ -80,10 +80,10 @@ const updateInputValues = (inputs: HTMLInputElement[], { hue, hex }: ConversionM
 	}
 
 	const colorValues = hex
-		? (updateColorValues({ hex }) as ColorModels)
-		: (updateColorValues({ hue }) as ColorModels)
+		? (updateColorValues({ hex }) as ColorObject)
+		: (updateColorValues({ hue }) as ColorObject)
 	inputs.forEach((input) => {
-		const type = input.id.split('input-')[1] as keyof ColorModels
+		const type = input.id.split('input-')[1] as keyof ColorObject
 		if (!type) return
 
 		if (type && type in colorValues) {

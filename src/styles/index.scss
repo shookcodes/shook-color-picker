@@ -1,4 +1,9 @@
-$pickerBg: #f9f9f9;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './variables.scss';
+@import './button.scss';
 
 :root {
 	@apply text-neutral-600;

@@ -1,4 +1,4 @@
-export interface ColorModels {
+export interface ColorObject {
 	hex: string
 	rgb: string
 	hsl: string

@@ -1,5 +1,5 @@
 import type {
-	ColorModels,
+	ColorObject,
 	ConversionModels,
 	RGBObject,
 	HSLObject,
@@ -173,7 +173,7 @@ const hexToCmyk = (hex: string): CMYKObject => {
 	return { string, arr: [c, m, y, k] }
 }
 
-const updateColorValues = ({ hue, hex }: ConversionModels): ColorModels | void => {
+const updateColorValues = ({ hue, hex }: ConversionModels): ColorObject | void => {
 	if (!hue && !hex) return
 	hue = typeof hue === 'string' ? parseInt(hue) : hue
 
