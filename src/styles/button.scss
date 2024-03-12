@@ -32,6 +32,10 @@ button:disabled {
 	&:hover {
 		@apply bg-transparent text-indigo-400;
 	}
+
+	.icon {
+		@apply pointer-events-none;
+	}
 }
 
 .button-add-active-color {
