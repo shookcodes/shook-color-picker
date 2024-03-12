@@ -17,29 +17,25 @@
 				id="settings-option-hex"
 				class="settings-dropdown-li"
 				@click="(e) => handleSettingToggle(e)">
-				<CheckBox
-					id="hex-toggle-checkbox"
-					:checked="settings.hex"
-					:checked-style="settings.hex ? '' : '{color: transparent}'"
-					name="hex" /><span>Hex</span>
+				<CheckBox id="hex-toggle-checkbox" :checked="formats.hex" name="hex" /><span>Hex</span>
 			</li>
 			<li
 				id="settings-option-rgb"
 				class="settings-dropdown-li"
 				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="rgb-toggle-checkbox" :checked="settings.rgb" name="rgb" /><span>RGB</span>
+				<CheckBox id="rgb-toggle-checkbox" :checked="formats.rgb" name="rgb" /><span>RGB</span>
 			</li>
 			<li
 				id="settings-option-hsl"
 				class="settings-dropdown-li"
 				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="hsl-toggle-checkbox" :checked="settings.hsl" name="hsl" /><span>HSL</span>
+				<CheckBox id="hsl-toggle-checkbox" :checked="formats.hsl" name="hsl" /><span>HSL</span>
 			</li>
 			<li
 				id="settings-option-cmyk"
 				class="settings-dropdown-li"
 				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="cmyk-toggle-checkbox" :checked="settings.cmyk" name="cmyk" /><span>CMYK</span>
+				<CheckBox id="cmyk-toggle-checkbox" :checked="formats.cmyk" name="cmyk" /><span>CMYK</span>
 			</li>
 		</ol>
 	</div>
@@ -54,7 +50,7 @@ import type { ColorFormatOption } from '../../types'
 
 import { useStore } from '@nanostores/vue'
 
-const settings = useStore($selectedFormats)
+const formats = useStore($selectedFormats)
 
 const showMenu = ref(false)
 const toggleButton = ref()
@@ -80,7 +76,7 @@ const handleSettingToggle = (e: MouseEvent) => {
 
 	const format = id[0] as ColorFormatOption
 
-	const value = !settings.value[format]
+	const value = !formats.value[format]
 	updateSettings.colorModel({ format, value })
 }
 
