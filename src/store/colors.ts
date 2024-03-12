@@ -13,8 +13,8 @@ export const $currentColor = persistentAtom<ColorObject>(
 	}
 )
 
-export const setCurrentColor = (color: ColorObject) => {
-	$currentColor.set({ ...color })
+export const setCurrentColor = (color: ColorObject): void => {
+	return $currentColor.set({ ...color })
 }
 
 export const $colorPalette = persistentAtom<ColorObject[]>('shookColorPickerColors', [], {

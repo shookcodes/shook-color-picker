@@ -21,17 +21,19 @@ const { className } = Astro.props
 		constructor() {
 			super()
 
-			const wrapper = document.querySelector('.canvas-wrapper')!
+			const wrapper: HTMLDivElement = document.querySelector('.canvas-wrapper')!
 			// Update the canvas gradients and set current color in store when the color slider  is updated
 			const handleSliderUpdate = (e: MouseEvent) => {
-				const hue = e.target.value
+				if (!e.target) return
+				const target = e?.target as HTMLInputElement
+				const hue = target.value
 				setCanvas({ wrapper, hue })
 				const color = updateColorValues({ hue })
 				setCurrentColor(color)
 			}
 
-			const slider = this.querySelector('.color-slider')
-			slider.addEventListener('input', handleSliderUpdate)
+			const slider = this.querySelector('.color-slider')!
+			slider.addEventListener('input', (e: MouseEvent) => handleSliderUpdate(e))
 		}
 	}
 	customElements.define('color-slider', ShookColorSlider)

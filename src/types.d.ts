@@ -36,7 +36,7 @@ export interface CanvasProps extends Canvas2DSize {
 
 export interface DrawCanvas {
 	wrapper: HTMLDivElement
-	hue: number
+	hue: number | string
 }
 
 export interface RGBObject {
@@ -57,3 +57,7 @@ export interface CMYKObject {
 	string: string
 	arr: [c: number, m: number, y: number, k: number]
 }
+
+export type ColorFunctionReturn = ColorObject | void
+
+export type FormatObjectReturn = { string: string; arr?: string[] | number[] }

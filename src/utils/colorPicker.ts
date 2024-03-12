@@ -2,8 +2,12 @@ import type { DrawCanvas, CanvasProps, ColorObject } from '../types'
 
 import { updateColorValues } from './convertColor'
 
-const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-	if (!ctx || !x || !y) return
+const getColorAtPosition = (
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number
+): ColorObject | Error => {
+	if (!ctx || !x || !y) return new Error('Values not provided to get color at this position.')
 	const imageData = ctx.getImageData(x, y, 1, 1).data
 
 	const toHex = (value: number) => {
@@ -24,6 +28,7 @@ const getColorAtPosition = (ctx: CanvasRenderingContext2D, x: number, y: number)
 
 // Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
 const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
+	hue = typeof hue === 'string' ? parseInt(hue) : hue
 	const width = wrapper.clientWidth
 	const height = wrapper.clientHeight
 
@@ -62,8 +67,12 @@ const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
 	return ctx
 }
 
-const getCursorPoint = (el: HTMLElement, x: number, y: number) => {
+const getCursorPoint = (el: HTMLElement, x: number | string, y: number | string) => {
 	if (!x || !y) return
+
+	x = typeof x === 'string' ? parseInt(x) : x
+	y = typeof y === 'string' ? parseInt(y) : y
+
 	const bounds = el.getBoundingClientRect()
 
 	const left = bounds.left >= 0 ? x - bounds.left : x + bounds.left * -1

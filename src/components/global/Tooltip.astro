@@ -14,11 +14,11 @@
 			super()
 
 			const wrapper: HTMLDivElement = document.querySelector('.canvas-wrapper')!
-			const canvas: HTMLCanvasElement = wrapper.querySelector('#shook-color-picker-canvas')
+			const canvas: HTMLCanvasElement = wrapper.querySelector('#shook-color-picker-canvas')!
 
 			const ctx = canvas.getContext('2d')!
 
-			const tooltip: HTMLDivElement = this
+			const tooltip: HTMLElement = this
 
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 
@@ -34,7 +34,7 @@
 				if (!top || !left) {
 					return (tooltip.style.opacity = '0')
 				}
-				const { hex } = getColorAtPosition(ctx, left, top)
+				const { hex } = getColorAtPosition(ctx, left, top) as ColorObject
 
 				tooltip.style.opacity = '1'
 				tooltip.style.left = `${left + 10}px`
@@ -53,11 +53,11 @@
 				}
 			}
 
-			canvas.addEventListener('mouseenter', (e) => handleTooltipVisibility(e, tooltip))
+			canvas.addEventListener('mouseenter', (e) => handleTooltipVisibility(e))
 
-			canvas.addEventListener('mousemove', (e) => updateTooltipPosition(e, tooltip))
+			canvas.addEventListener('mousemove', (e) => updateTooltipPosition(e))
 
-			canvas.addEventListener('mouseleave', (e) => handleTooltipVisibility(e, tooltip))
+			canvas.addEventListener('mouseleave', (e) => handleTooltipVisibility(e))
 		}
 	}
 

@@ -1,11 +1,4 @@
-import type {
-	ColorObject,
-	ConversionModels,
-	RGBObject,
-	HSLObject,
-	HexObject,
-	CMYKObject
-} from '../types'
+import type { ColorObject, ConversionModels, FormatObjectReturn } from '../types'
 
 function _scrubHex(hex: string) {
 	if (hex.charAt(0) === '#') {
@@ -14,8 +7,8 @@ function _scrubHex(hex: string) {
 	return hex
 }
 
-const hexToRgb = (hex: string): RGBObject | void => {
-	if (!hex) return
+const hexToRgb = (hex: string): FormatObjectReturn | Error => {
+	if (!hex) return new Error('No string provided.')
 	hex = '0x' + _scrubHex(hex)
 
 	const bigint = parseInt(hex, 16)
@@ -29,8 +22,8 @@ const hexToRgb = (hex: string): RGBObject | void => {
 	return { string, arr: [r, g, b] }
 }
 
-const hexToHsl = (hex: string): HSLObject | void => {
-	if (!hex) return
+const hexToHsl = (hex: string): FormatObjectReturn | Error => {
+	if (!hex) return new Error('No string provided.')
 	// Remove the hash if it exists
 	hex = hex.replace(/^#/, '')
 
@@ -79,7 +72,7 @@ const hexToHsl = (hex: string): HSLObject | void => {
 	return { string, arr: [h, s, l] }
 }
 
-const hslToRgb = (h: number, s: number, l: number) => {
+const hslToRgb = (h: number, s: number, l: number): FormatObjectReturn => {
 	h /= 360
 	s /= 100
 	l /= 100
@@ -112,7 +105,7 @@ const hslToRgb = (h: number, s: number, l: number) => {
 	return { string, arr: [r, g, b] }
 }
 
-const hslToHex = (h: number, s: number, l: number): HexObject => {
+const hslToHex = (h: number, s: number, l: number): FormatObjectReturn => {
 	h /= 360
 	s /= 100
 	l /= 100
@@ -135,7 +128,7 @@ const hslToHex = (h: number, s: number, l: number): HexObject => {
 	return { string }
 }
 
-const hexToCmyk = (hex: string): CMYKObject => {
+const hexToCmyk = (hex: string): FormatObjectReturn => {
 	// Remove the hash if it exists
 	hex = _scrubHex(hex)
 
@@ -173,10 +166,10 @@ const hexToCmyk = (hex: string): CMYKObject => {
 	return { string, arr: [c, m, y, k] }
 }
 
-const updateColorValues = ({ hue, hex }: ConversionModels): ColorObject | void => {
-	if (!hue && !hex) return
+const updateColorValues = ({ hue, hex }: ConversionModels): ColorObject => {
+	if (!hue && !hex) new Error('No values to update colors.')
 
-	const colorObj = { hsl: '', hex: '', rgb: '', cmyk: '' }
+	const colorObj = { hsl: '', hex: '', rgb: '', cmyk: '' } as ColorObject
 
 	if (hue) {
 		hue = typeof hue === 'string' ? parseInt(hue) : hue
@@ -187,9 +180,13 @@ const updateColorValues = ({ hue, hex }: ConversionModels): ColorObject | void =
 	} else if (hex) {
 		hex = _scrubHex(hex)
 
-		colorObj.hsl = hexToHsl(hex).string
+		const { string: convertedHex } = hexToHsl(hex) as FormatObjectReturn
+
+		const { string: convertedRgb } = hexToRgb(hex) as FormatObjectReturn
+
+		colorObj.hsl = convertedHex
 		colorObj.hex = `#${hex}`
-		colorObj.rgb = hexToRgb(hex).string
+		colorObj.rgb = convertedRgb
 		colorObj.cmyk = hexToCmyk(hex).string
 	}
 
@@ -210,9 +207,10 @@ const toggleColor = ({
 	light = light ? light : '#f7f7f7'
 	dark = dark ? dark : '#212121'
 	// invert = invert ? invert : false
-	const { arr } = hexToRgb(hex)
+	const { arr: rgbArr } = hexToRgb(hex) as FormatObjectReturn
 
-	const [r, g, b] = arr
+	if (!rgbArr) throw new Error('Incorrect values provided for RGB calculation')
+	const [r, g, b] = rgbArr.map((val) => (typeof val === 'string' ? parseInt(val) : val))
 
 	const breakpoint = (value: number, point: number) => {
 		return Math.round(value * point)

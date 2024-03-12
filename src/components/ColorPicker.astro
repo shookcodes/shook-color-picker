@@ -1,15 +1,10 @@
 ---
 import MenuBar from './MenuBar.astro'
-import ColorCanvas from './ColorCanvas.astro'
 import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
-import Button from '@global/Button.astro'
 import Tooltip from '@global/Tooltip.astro'
 import ColorInputGroup from './ColorInputGroup.vue'
-import Input from '@global/Input.astro'
-import ColorPalette from '@palette/ColorPalette.vue'
-
-import { Icon } from 'astro-icon/components'
+// import ColorPalette from '@palette/ColorPalette.vue'
 ---
 
 <color-picker id="shook-color-picker" class="shook-color-picker opacity-0 background">
@@ -35,14 +30,10 @@ import { Icon } from 'astro-icon/components'
 </color-picker>
 
 <script>
-	import { $currentColor, setCurrentColor } from '../store/colors'
-	import {
-		setCanvas,
-		getColorAtPosition,
-		getCursorPoint
-		// updateInputValues
-	} from '@utils/colorPicker'
+	import { setCurrentColor } from '../store/colors'
+	import { setCanvas, getCursorPoint } from '@utils/colorPicker'
 	import { updateColorValues } from '@utils/convertColor'
+	import type { ColorObject } from '../types'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -54,16 +45,17 @@ import { Icon } from 'astro-icon/components'
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 
-			const { canvas, ctx, marker, color } = setCanvas({ wrapper, hue: slider.value })
+			const { canvas, marker } = setCanvas({ wrapper, hue: slider.value })
 
-			const initialize = () => {
+			const initialize = (event: Event): void => {
 				this.classList.remove('opacity-0')
 
+				const initialColor = updateColorValues({ hue: slider.value }) as ColorObject
 				// Set the current color in the store based on the slider position.
-				setCurrentColor(updateColorValues({ hue: slider.value }))
+				setCurrentColor(initialColor)
 			}
 
-			canvas.addEventListener('load', initialize())
+			window.addEventListener('load', initialize())
 
 			const handleCanvasClick = (e: MouseEvent) => {
 				const hex = tooltipText.innerText
@@ -71,18 +63,19 @@ import { Icon } from 'astro-icon/components'
 				const x = e.clientX
 				const y = e.clientY
 
-				const { left, top } = getCursorPoint(wrapper, x, y)
+				const { left, top } = getCursorPoint(wrapper, x, y) as { left: number; top: number }
 
 				if (!top || !left) return
 
 				marker.style.display = 'block'
 
-				marker.style.left = `${left - 4}px`
-				marker.style.top = `${top - 4}px`
+				marker.style.left = (left - 4 + 'px').toString()
+				marker.style.top = (top - 4 + 'px').toString()
 
 				// Get color object based on hex value and set the new object to the store.
 				const color = updateColorValues({ hex })
 				setCurrentColor(color)
+				return color
 			}
 
 			canvas.addEventListener('click', (e) => {
