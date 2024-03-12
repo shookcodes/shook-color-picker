@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import Button from '@global/Button.vue'
 import CopyIcon from '@icons/copy.svg?component'
 import { copyContent } from '@utils/clipboard'

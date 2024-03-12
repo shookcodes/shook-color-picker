@@ -1,26 +1,32 @@
 <template>
-	<div :class="className">
+	<div class="checkbox" :class="className">
 		<label
 			ref="label"
 			:for="name"
-			:value="name"
+			:value="value ? value : name"
 			class="label"
-			@click="handleCheck(value)"
+			@click="handleCheck(value ? value : '')"
 			@mouseover="handleMouseOver(hoverCallback)"
 			:style="labelStyle"></label>
-		<CheckSvg ref="icon" class="icon" :id="`icon-${id}`" :style="checkStyle" />
-		<input :id="id" :name="name" :checked="checked" type="checkbox" />
+
+		<input :id="id" :name="name" :checked="isChecked" type="checkbox" />
+		<CheckSvg
+			ref="icon"
+			class="icon"
+			:id="`icon-${id}`"
+			:class="checked ? '' : 'text-transparent'"
+			:style="checkMarkStyle" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { StyleValue } from 'vue'
 import CheckSvg from '@icons/check.svg?component'
 
 interface Props {
 	name: string
-	value: string
+	value?: string
 	id: string
 	checked: boolean
 	className?: string
@@ -35,16 +41,11 @@ interface Emits {
 	(e: 'mouseover', value?: any): void
 }
 
-interface Props {
-	name: string
-	value: string
-	id: string
-}
-
-const { checked } = defineProps<Props>()
+const { checked, checkStyle } = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const isChecked = ref(checked || false)
+const checkMarkStyle = computed(() => checkStyle)
+const isChecked = ref(false)
 
 const handleCheck = (value: any) => {
 	isChecked.value = !isChecked.value

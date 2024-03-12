@@ -1,5 +1,6 @@
 <template>
 	<button
+		:id="id"
 		:disabled="disabled ? true : false"
 		:aria-label="ariaLabel"
 		:class="className"
@@ -12,6 +13,7 @@ interface Props {
 	ariaLabel: string
 	disabled?: boolean
 	className?: string
+	id?: string
 }
 
 interface Emits {

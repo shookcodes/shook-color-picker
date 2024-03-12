@@ -5,7 +5,7 @@ export const locale = persistentAtom('locale', 'en')
 import type { ColorObject } from '../types'
 
 export const $currentColor = persistentAtom<ColorObject>(
-	'activeColor',
+	'shookActiveColor',
 	{ hex: '', rgb: '', hsl: '', cmyk: '' },
 	{
 		encode: JSON.stringify,
@@ -17,7 +17,7 @@ export const setCurrentColor = (color: ColorObject) => {
 	$currentColor.set({ ...color })
 }
 
-export const $colorPalette = persistentAtom<ColorObject[]>('colors', [], {
+export const $colorPalette = persistentAtom<ColorObject[]>('shookColorPickerColors', [], {
 	encode: JSON.stringify,
 	decode: JSON.parse
 })

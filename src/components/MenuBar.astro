@@ -1,12 +1,12 @@
 ---
 import { Icon } from 'astro-icon/components'
-import SettingsDropdown from './menu/SettingsDropdown.astro'
+import SettingsDropdown from './menu/SettingsDropdown.vue'
 import Button from '@global/Button.vue'
 ---
 
 <div class="menu-bar">
 	<div class="menu-items background background-small">
-		<SettingsDropdown />
+		<SettingsDropdown client:only="vue" />
 	</div>
 </div>
 
@@ -14,7 +14,7 @@ import Button from '@global/Button.vue'
 	@import '../styles/variables.scss';
 
 	.menu-bar {
-		@apply absolute -top-7 right-0 flex w-full items-center justify-end;
+		@apply absolute -top-7 right-0 z-10 flex w-full items-center justify-end;
 
 		.menu-items {
 			@apply relative flex items-center;
