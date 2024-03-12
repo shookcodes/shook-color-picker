@@ -1,11 +1,12 @@
 <template>
-	<div class="color-input">
+	<div class="color-input" :class="className">
 		<label class="color-input-label">
 			<span class="label-title">{{ title }}</span>
 			<input
 				ref="inputRef"
 				type="text"
 				aria-label="ariaLabel"
+				:aria-hidden="hideAria"
 				id="id"
 				class="color-input-field"
 				:value="color"
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Button from '@global/Button.vue'
 import CopyIcon from '@icons/copy.svg?component'
 import { copyContent } from '@utils/clipboard'
@@ -30,12 +31,15 @@ interface Props {
 	title: string
 	ariaLabel: string
 	id: string
+	ariaHidden?: boolean
 	color?: string
+	className?: string
 }
 
-const { color } = defineProps<Props>()
+const { color, ariaHidden } = defineProps<Props>()
 
 const input = ref()
+const hideAria = computed(() => ariaHidden || false)
 
 const messageRef = ref()
 const copyInputValue = async () => {
