@@ -2,14 +2,14 @@
 	<div class="active-color">
 		<div class="active-color-grid">
 			<div class="active-color-preview" :style="{ background: hex }"></div>
-			<Button
+			<!-- <Button
 				:disabled="disabled"
 				ariaLabel="add the color to the color palette"
 				className="button-add-active-color"
 				@click="addColorToPalette"
 				>Add Color
 				<AddSvg />
-			</Button>
+			</Button> -->
 			<span
 				ref="errorSpan"
 				class="active-color-message error-text"
