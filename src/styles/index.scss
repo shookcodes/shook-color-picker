@@ -5,6 +5,7 @@
 @import './variables.scss';
 @import './button.scss';
 @import './input.scss';
+@import './typography.scss';
 
 :root {
 	@apply text-neutral-600;
@@ -38,11 +39,4 @@ body > * {
 			@apply rounded;
 		}
 	}
-}
-
-.error-text {
-	color: $error;
-}
-
-.success-text {
 }

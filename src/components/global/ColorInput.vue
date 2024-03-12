@@ -11,13 +11,15 @@
 				class="color-input-field"
 				:value="color"
 		/></label>
-		<Button
-			ariaLabel="copy the selected hex value"
-			className="button-icon button-input-copy"
-			@clicked="copyInputValue"
-			><CopyIcon
-		/></Button>
-		<span ref="messageRef" class="message-span opacity-0"></span>
+		<div ref="copyButtonRef" class="copy-button-wrapper">
+			<Button
+				ariaLabel="copy the selected hex value"
+				className="button-icon button-input-copy"
+				@clicked="copyInputValue"
+				><CopyIcon
+			/></Button>
+		</div>
+		<span ref="messageRef" class="message-span"></span>
 	</div>
 </template>
 
@@ -26,6 +28,7 @@ import { ref, computed } from 'vue'
 import Button from '@global/Button.vue'
 import CopyIcon from '@icons/copy.svg?component'
 import { copyContent } from '@utils/clipboard'
+import '@styles/typography.scss'
 
 interface Props {
 	title: string
@@ -41,6 +44,8 @@ const { color, ariaHidden } = defineProps<Props>()
 const input = ref()
 const hideAria = computed(() => ariaHidden || false)
 
+const copyButtonRef = ref()
+
 const messageRef = ref()
 const copyInputValue = async () => {
 	const copied = await copyContent(input.value)
@@ -52,18 +57,31 @@ const copyInputValue = async () => {
 		messageRef.value.classList.add('error-text')
 		messageRef.value.innerText = 'Error copying'
 	}
-	messageRef.value.classList.remove('opacity-0')
 	setTimeout(() => {
-		messageRef.value.classList.add('opacity-0')
-	}, 3000)
+		copyButtonRef.value.ariaHidden = true
+		copyButtonRef.value.classList.add('opacity-0')
+
+		messageRef.value.ariaHidden = false
+		messageRef.value.classList.remove('opacity-0')
+	}, 200)
 
 	setTimeout(() => {
+		copyButtonRef.value.classList.remove('opacity-0')
+
+		messageRef.value.classList.add('opacity-0')
+	}, 2000)
+
+	setTimeout(() => {
+		copyButtonRef.value.ariaHidden = false
+
+		messageRef.value.ariaHidden = true
 		messageRef.value.classList.remove('error-text', 'success-text')
-		messageRef.value.innerText = ''
 	}, 4000)
 }
 </script>
 <style lang="scss" scoped>
+@import '../../styles/typography.scss';
+
 .color-input {
 	@apply relative;
 }
@@ -86,10 +104,14 @@ const copyInputValue = async () => {
 	font-size: 0.95rem;
 }
 
-.message-span {
-	transition: opacity 0.2s ease-in-out;
+.copy-button-wrapper {
+	transition: opacity 0.3s ease-in-out;
+}
 
-	@apply absolute right-0 top-12 z-10 mt-1.5 text-sm
-			font-semibold;
+.message-span {
+	transition: opacity 0.3s ease-in-out;
+
+	@apply pointer-events-none absolute right-2 top-4 z-10 mt-1.5 cursor-default text-sm font-semibold
+			caret-transparent;
 }
 </style>
