@@ -48,7 +48,6 @@ const updateSelectedColors = (color: ColorObject) => {
 
 const handleClearPalette = () => {
 	selected.slice(0)
-	console.log('clear', selected)
 	updatePalette.deleteAll()
 }
 </script>
@@ -57,7 +56,7 @@ const handleClearPalette = () => {
 @import '../../styles/button.scss';
 .palette {
 	// grid  grid-cols-5
-	@apply flex translate-y-0 flex-col gap-5  border-t border-neutral-300 transition-all;
+	@apply mt-4 flex translate-y-0 flex-col   gap-5 border-t border-neutral-300 pt-1 transition-all;
 
 	.palette-colors {
 		z-index: 1;

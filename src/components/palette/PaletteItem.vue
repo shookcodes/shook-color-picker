@@ -1,23 +1,20 @@
 <template>
-	<div class="palette-item">
-		<!-- @mouseover="handleColorHover" -->
-		<label
-			ref="label"
-			:for="color.hex"
-			:value="color.hex"
-			class="label"
-			@click="handleCheck()"
-			:style="{ background: color.hex }"></label>
-		<CheckSvg ref="icon" class="icon" :id="`icon-${id}`" :style="checkStyle" />
-		<input :id="color.hex" :name="color.hex" :checked="isChecked" type="checkbox" />
-	</div>
+	<CheckBox
+		:id="id"
+		:name="color.hex"
+		:value="color.hex"
+		@click="handleCheck"
+		:checkStyle="checkStyle"
+		:labelStyle="{ background: color.hex }"
+		className="checkbox-palette"
+		:checked="isChecked" />
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import CheckSvg from '@icons/check.svg?component'
+// import CheckSvg from '@icons/check.svg?component'
 import { toggleColor } from '@utils/convertColor'
 import type { ColorObject } from '../../types'
-
+import CheckBox from '@global/CheckBox.vue'
 interface Props {
 	color: ColorObject
 	id: string

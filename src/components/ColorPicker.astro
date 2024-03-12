@@ -29,10 +29,9 @@ import { Icon } from 'astro-icon/components'
 		<div class="selected-colors-group">
 			<ActiveColor client:only="vue" />
 			<ColorInputGroup client:only="vue" />
-
-			<ColorPalette client:only="vue" />
 		</div>
 	</div>
+	<ColorPalette client:only="vue" />
 </color-picker>
 
 <script>
