@@ -34,5 +34,9 @@ export const updatePalette = {
 		}
 
 		$colorPalette.set([...palette, $currentColor.get()])
+	},
+
+	deleteAll: () => {
+		$colorPalette.set([])
 	}
 }

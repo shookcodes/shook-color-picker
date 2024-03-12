@@ -10,7 +10,10 @@
 			</div>
 		</div>
 		<div class="palette-actions">
-			<Button className="button-palette-action clear-palette" ariaLabel="clear palette colors"
+			<Button
+				className="button-palette-action clear-palette"
+				ariaLabel="clear palette colors"
+				@click="handleClearPalette"
 				>Clear Palette</Button
 			>
 			<Button className="button-palette-action save-palette" ariaLabel="save palette colors"
@@ -22,7 +25,7 @@
 <script lang="ts" setup>
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
-import { $colorPalette } from '@store/colors'
+import { $colorPalette, updatePalette } from '@store/colors'
 import { useStore } from '@nanostores/vue'
 import type { ColorObject } from '@/types'
 
@@ -42,13 +45,19 @@ const updateSelectedColors = (color: ColorObject) => {
 
 	return selected
 }
+
+const handleClearPalette = () => {
+	selected.slice(0)
+	console.log('clear', selected)
+	updatePalette.deleteAll()
+}
 </script>
 
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
 	// grid  grid-cols-5
-	@apply flex flex-col gap-5;
+	@apply flex translate-y-0 flex-col gap-5  border-t border-neutral-300 transition-all;
 
 	.palette-colors {
 		z-index: 1;
