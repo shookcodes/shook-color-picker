@@ -58,12 +58,12 @@ const checkStyle = computed(() => {
 </script>
 <style scoped lang="scss">
 .palette-item {
-	@apply relative flex aspect-square w-full items-center justify-center;
+	@apply relative flex aspect-square w-full items-center justify-center transition-all;
 
 	label {
 		box-shadow: 2px 2px 6px rgba(#464646, 0.4);
 
-		@apply m-auto flex aspect-square w-full rounded-md border-2 border-neutral-100 hover:cursor-pointer;
+		@apply flex aspect-square min-w-full items-center justify-center rounded-md border-2 border-neutral-100 hover:cursor-pointer;
 	}
 
 	.icon {

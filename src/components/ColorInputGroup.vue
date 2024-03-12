@@ -20,6 +20,6 @@ const store = useStore($currentColor)
 <style lang="scss" scoped>
 .color-inputs {
 	gap: 1.75rem;
-	@apply flex flex-col gap-2.5 border-b border-t border-neutral-300 pb-4 pt-2;
+	@apply flex flex-col gap-2.5  border-t pb-4 pt-2;
 }
 </style>
