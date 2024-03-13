@@ -1,6 +1,5 @@
-import type { DrawCanvas, CanvasProps, ColorObject } from '../types'
-
 import { updateColorValues } from './convertColor'
+import type { DrawCanvas, CanvasProps, ColorObject, CursorCoordinates } from '../types'
 
 const getColorAtPosition = (
 	ctx: CanvasRenderingContext2D,
@@ -21,7 +20,7 @@ const getColorAtPosition = (
 
 	const isEmpty = Object.values(color).every((x) => x === null || x === '')
 
-	if (isEmpty) return console.log('No color at current position')
+	if (isEmpty) return new Error('No color at current position')
 
 	return { ...color }
 }
@@ -67,8 +66,12 @@ const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
 	return ctx
 }
 
-const getCursorPoint = (el: HTMLElement, x: number | string, y: number | string) => {
-	if (!x || !y) return
+const getCursorPoint = (
+	el: HTMLElement,
+	x: number | string,
+	y: number | string
+): CursorCoordinates | Error => {
+	if (!x || !y) return new Error('No coordinates found for cursor point.')
 
 	x = typeof x === 'string' ? parseInt(x) : x
 	y = typeof y === 'string' ? parseInt(y) : y

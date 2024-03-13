@@ -8,6 +8,7 @@
 
 <script>
 	import { getCursorPoint, getColorAtPosition } from '../../utils/colorPicker'
+	import type { ColorObject, CursorCoordinates } from '../../types'
 
 	class ShookColorTooltip extends HTMLElement {
 		constructor() {
@@ -29,7 +30,7 @@
 				const x = e.clientX
 				const y = e.clientY
 
-				const { top, left } = getCursorPoint(wrapper, x, y)
+				const { top, left }: CursorCoordinates = getCursorPoint(wrapper, x, y) as CursorCoordinates
 
 				if (!top || !left) {
 					return (tooltip.style.opacity = '0')

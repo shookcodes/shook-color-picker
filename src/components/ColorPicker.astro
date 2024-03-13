@@ -33,7 +33,7 @@ import ColorInputGroup from './ColorInputGroup.vue'
 	import { setCurrentColor } from '../store/colors'
 	import { setCanvas, getCursorPoint } from '@utils/colorPicker'
 	import { updateColorValues } from '@utils/convertColor'
-	import type { ColorObject } from '../types'
+	import type { ColorObject, CursorCoordinates } from '../types'
 
 	class ShookColorPicker extends HTMLElement {
 		constructor() {
@@ -47,7 +47,7 @@ import ColorInputGroup from './ColorInputGroup.vue'
 
 			const { canvas, marker } = setCanvas({ wrapper, hue: slider.value })
 
-			const initialize = (event: Event): void => {
+			const initialize = (): void => {
 				this.classList.remove('opacity-0')
 
 				const initialColor = updateColorValues({ hue: slider.value }) as ColorObject
@@ -55,7 +55,7 @@ import ColorInputGroup from './ColorInputGroup.vue'
 				setCurrentColor(initialColor)
 			}
 
-			window.addEventListener('load', initialize())
+			window.addEventListener('load', initialize)
 
 			const handleCanvasClick = (e: MouseEvent) => {
 				const hex = tooltipText.innerText
@@ -63,7 +63,10 @@ import ColorInputGroup from './ColorInputGroup.vue'
 				const x = e.clientX
 				const y = e.clientY
 
-				const { left, top } = getCursorPoint(wrapper, x, y) as { left: number; top: number }
+				const { left, top }: CursorCoordinates = getCursorPoint(wrapper, x, y) as {
+					left: number
+					top: number
+				}
 
 				if (!top || !left) return
 

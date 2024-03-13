@@ -18,6 +18,20 @@ export interface ColorObject {
 	cmyk: string
 }
 
+export interface CursorCoordinates {
+	left: number
+	top: number
+}
+
+export interface CanvasCoordinates {
+	x: number
+	y: number
+}
+
+export interface CanvasCoordinatesWithContext extends CanvasCoordinates {
+	ctx: CanvasRenderingContext2D
+}
+
 export interface ConversionModels {
 	hue?: string | number
 	hex?: string | undefined
