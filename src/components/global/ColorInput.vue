@@ -1,17 +1,18 @@
 <template>
 	<div class="color-input" :class="className">
-		<label class="color-input-label">
-			<span class="label-title">{{ title }}</span>
-			<input
+		<label :for="id" class="color-input-label" aria-label="">{{ title }}</label>
+
+		<span class="relative"
+			><input
 				ref="inputRef"
 				type="text"
 				aria-label="ariaLabel"
 				:aria-hidden="hideAria"
-				id="id"
+				:id="id"
 				class="color-input-field"
 				:value="color"
-		/></label>
-		<div ref="copyButtonRef" class="copy-button-wrapper">
+		/></span>
+		<div ref="copyButtonRef" class="input-button-wrapper">
 			<Button
 				ariaLabel="copy the selected hex value"
 				className="button-icon button-input-copy"
@@ -37,6 +38,7 @@ interface Props {
 	ariaHidden?: boolean
 	color?: string
 	className?: string
+	// inputClassName?: string
 }
 
 const { color, ariaHidden } = defineProps<Props>()
@@ -81,37 +83,25 @@ const copyInputValue = async () => {
 </script>
 <style lang="scss" scoped>
 @import '../../styles/typography.scss';
+@import '../../styles/input.scss';
 
-.color-input {
-	@apply relative;
-}
-
-.color-input-label {
-	@apply flex flex-col gap-0.5;
-
-	& span {
-		caret-color: transparent;
-		@apply text-xs;
-	}
-}
-
-.color-input-field {
-	border: 1px solid #ccc;
-	z-index: 1;
-	height: 1.8rem;
-	padding: 0 0.5rem;
-	border-radius: 6px;
-	font-size: 0.95rem;
-}
-
-.copy-button-wrapper {
+.input-button-wrapper {
 	transition: opacity 0.3s ease-in-out;
+	button {
+		@apply origin-top transition-all ease-in-out;
+	}
 }
 
 .message-span {
 	transition: opacity 0.3s ease-in-out;
 
-	@apply pointer-events-none absolute right-2 top-4 z-10 mt-1.5 cursor-default text-sm font-semibold
+	@apply pointer-events-none absolute right-2 top-4 z-10 mt-3 cursor-default text-sm font-semibold
 			caret-transparent;
+}
+
+.hidden-text-input {
+	& .input-button-wrapper button {
+		@apply scale-y-0;
+	}
 }
 </style>

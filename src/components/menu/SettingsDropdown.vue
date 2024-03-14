@@ -41,7 +41,7 @@
 	</div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import Button from '@global/Button.vue'
 import CheckBox from '@global/CheckBox.vue'
 import SettingsSvg from '@icons/settings.svg?component'
