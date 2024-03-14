@@ -1,5 +1,5 @@
 <template>
-	<div class="color-inputs">
+	<div class="color-inputs" ref="inputGroup">
 		<ColorInput
 			ariaLabel="selected hex code value"
 			title="Hex"
@@ -31,6 +31,7 @@
 	</div>
 </template>
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
 import ColorInput from '@global/ColorInput.vue'
 import { $currentColor } from '@store/colors'
 import { $selectedFormats } from '@store/settings'
@@ -39,11 +40,28 @@ import { useStore } from '@nanostores/vue'
 const store = useStore($currentColor)
 
 const formats = useStore($selectedFormats)
+
+const inputGroup = ref()
+
+watch(formats, () => {
+	const values = Object.values({ ...formats.value })
+
+	const hasFormat = values.find((bool) => bool === true)
+	if (!hasFormat) {
+		return inputGroup.value.classList.add('all-inputs-hidden')
+	} else {
+		return inputGroup.value.classList.remove('all-inputs-hidden')
+	}
+})
 </script>
 <style lang="scss" scoped>
 @import '../styles/input.scss';
 .color-inputs {
 	gap: 1.75rem;
-	@apply flex flex-col gap-0;
+	@apply flex flex-col gap-0 border-t border-neutral-300 transition-all ease-in-out;
+
+	&.all-inputs-hidden {
+		@apply -mt-2 border-none;
+	}
 }
 </style>

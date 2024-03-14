@@ -52,7 +52,7 @@ const addColorToPalette = () => {
 <style lang="scss" scoped>
 @import '../styles/variables.scss';
 .active-color {
-	@apply relative;
+	@apply relative z-10;
 }
 
 .active-color-grid {
