@@ -11,7 +11,6 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-// import CheckSvg from '@icons/check.svg?component'
 import { toggleColor } from '@utils/convertColor'
 import type { ColorObject } from '../../types'
 import CheckBox from '@global/CheckBox.vue'
