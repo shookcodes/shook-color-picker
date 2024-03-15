@@ -44,12 +44,12 @@ button:disabled {
 	&.icon {
 		@apply ml-1.5 h-3  w-3 p-0 transition-all duration-500;
 	}
+
+	&.button-hidden {
+		@apply scale-0 opacity-0;
+	}
 	&:hover {
 		@apply shadow-lg;
-
-		// &.icon {
-		// 	@apply scale-110;
-		// }
 	}
 }
 

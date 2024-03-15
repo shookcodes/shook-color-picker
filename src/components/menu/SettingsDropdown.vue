@@ -37,6 +37,14 @@
 				@click="(e) => handleSettingToggle(e)">
 				<CheckBox id="cmyk-toggle-checkbox" :checked="formats.cmyk" name="cmyk" /><span>CMYK</span>
 			</li>
+			<li
+				id="settings-option-palette"
+				class="settings-dropdown-li"
+				@click="(e) => handleSettingToggle(e)">
+				<CheckBox id="palette-toggle-checkbox" :checked="showPalette" name="show-palette" /><span
+					>Show Palette</span
+				>
+			</li>
 		</ol>
 	</div>
 </template>
@@ -45,12 +53,13 @@ import { ref, onMounted } from 'vue'
 import Button from '@global/Button.vue'
 import CheckBox from '@global/CheckBox.vue'
 import SettingsSvg from '@icons/settings.svg?component'
-import { $selectedFormats, updateSettings } from '@store/settings'
+import { $selectedFormats, $showPalette, updateShowPalette, updateFormats } from '@store/settings'
 import type { ColorFormatOption } from '../../types'
 
 import { useStore } from '@nanostores/vue'
 
 const formats = useStore($selectedFormats)
+const showPalette = useStore($showPalette)
 
 const showMenu = ref(false)
 const toggleButton = ref()
@@ -74,10 +83,14 @@ const handleSettingToggle = (e: MouseEvent) => {
 	const id = checkbox?.id.split('-')
 	if (!id) return console.log('No setting found for the option selected.')
 
+	if (id[0] === 'palette') {
+		return updateShowPalette(!showPalette.value)
+	}
+
 	const format = id[0] as ColorFormatOption
 
 	const value = !formats.value[format]
-	updateSettings.colorModel({ format, value })
+	updateFormats.colorModel({ format, value })
 }
 
 onMounted(() => {
@@ -92,7 +105,7 @@ onMounted(() => {
 }
 
 .settings-dropdown {
-	@apply absolute top-0 mt-6 flex w-max flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
+	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-100 py-2 shadow-md transition-all;
 }
 
 .settings-dropdown-li {

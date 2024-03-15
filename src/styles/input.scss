@@ -55,8 +55,6 @@
 		@apply relative flex aspect-square w-full items-center justify-center border-none bg-transparent transition-all;
 
 		label {
-			box-shadow: 2px 2px 6px rgba(#464646, 0.4);
-
 			@apply flex aspect-square min-w-full items-center justify-center rounded-md border-2 border-neutral-100 hover:cursor-pointer;
 		}
 

@@ -4,7 +4,7 @@ import ColorSlider from './ColorSlider.astro'
 import ActiveColor from './ActiveColor.vue'
 import Tooltip from '@global/Tooltip.astro'
 import ColorInputGroup from './ColorInputGroup.vue'
-// import ColorPalette from '@palette/ColorPalette.vue'
+import ColorPalette from '@palette/ColorPalette.vue'
 ---
 
 <color-picker id="shook-color-picker" class="shook-color-picker opacity-0 background">
@@ -26,13 +26,14 @@ import ColorInputGroup from './ColorInputGroup.vue'
 			<ColorInputGroup client:only="vue" />
 		</div>
 	</div>
-	<!-- <ColorPalette client:only="vue" /> -->
+	<ColorPalette client:only="vue" />
 </color-picker>
 
 <script>
-	import { setCurrentColor } from '../store/colors'
 	import { setCanvas, getCursorPoint } from '@utils/colorPicker'
 	import { updateColorValues } from '@utils/convertColor'
+	import { setCurrentColor } from '../store/colors'
+
 	import type { ColorObject, CursorCoordinates } from '../types'
 
 	class ShookColorPicker extends HTMLElement {
