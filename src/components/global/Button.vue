@@ -1,5 +1,6 @@
 <template>
 	<button
+		ref="buttonRef"
 		:id="id"
 		:disabled="disabled ? true : false"
 		:aria-label="ariaLabel"
@@ -10,7 +11,7 @@
 	</button>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, type Ref } from 'vue'
+import { ref } from 'vue'
 interface Props {
 	ariaLabel: string
 	ariaHidden?: boolean
@@ -25,6 +26,10 @@ interface Emits {
 
 defineProps<Props>()
 defineEmits<Emits>()
+
+const buttonRef = ref()
+
+defineExpose({ buttonRef })
 </script>
 <style lang="scss">
 @import '../../styles/button.scss';

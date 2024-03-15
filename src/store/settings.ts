@@ -1,5 +1,5 @@
 import { persistentAtom } from '@nanostores/persistent'
-import type { ColorPickerSettings, ColorFormatBooleans, ColorFormatOption } from '../types'
+import type { ColorPickerSettings, ColorFormatBooleans, ColorFormatOption } from './types'
 
 export const locale = persistentAtom('locale', 'en')
 
@@ -17,7 +17,7 @@ export const $selectedFormats = persistentAtom<ColorFormatBooleans>(
 	}
 )
 
-export const $showPalette = persistentAtom<ColorFormatBooleans>('shookShowPaletteSetting', false, {
+export const $showPalette = persistentAtom<Boolean>('shookShowPaletteSetting', false, {
 	encode: JSON.stringify,
 	decode: JSON.parse
 })

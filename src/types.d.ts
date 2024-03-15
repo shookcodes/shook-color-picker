@@ -1,16 +1,5 @@
 type ColorFormatOption = 'hex' | 'rgb' | 'hsl' | 'cmyk'
 
-interface ColorFormatBooleans {
-	hex: boolean
-	rgb: boolean
-	hsl: boolean
-	cmyk: boolean
-}
-
-interface ColorPickerSettings {
-	showFormats: ColorFormatBooleans
-}
-
 export interface ColorObject {
 	hex: string
 	rgb: string
