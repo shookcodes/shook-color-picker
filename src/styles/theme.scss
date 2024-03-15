@@ -1,0 +1,30 @@
+.theme-default {
+	&::after {
+		content: '';
+		background: $bgLight;
+		opacity: 0.75;
+		z-index: -1;
+		@apply absolute inset-0 h-full w-full rounded-md;
+	}
+}
+
+.theme-dark::after {
+	content: '';
+	background: #212121;
+}
+
+.background {
+	padding: 0.75rem;
+	box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
+	@apply relative bg-transparent;
+
+	& .background-small {
+		padding: 2px;
+
+		&::after {
+			content: '';
+
+			@apply rounded;
+		}
+	}
+}

@@ -14,7 +14,10 @@ export interface ColorFormatBooleans {
 	cmyk: boolean
 }
 
+export type ColorPickerTheme = 'default' | 'dark' | 'light'
+
 export interface ColorPickerSettings {
 	formats: ColorFormatBooleans
 	showPalette: boolean
+	theme: ColorPickerTheme
 }
