@@ -1,5 +1,5 @@
 <template>
-	<div class="palette">
+	<div class="palette" ref="paletteRef">
 		<div class="palette-colors">
 			<div v-for="(color, index) in palette">
 				<PaletteItem
@@ -23,13 +23,36 @@
 	</div>
 </template>
 <script lang="ts" setup>
+import { computed, ref } from 'vue'
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
 import { $colorPalette, updatePalette } from '@store/colors'
+import { $showPalette } from '@store/settings'
 import { useStore } from '@nanostores/vue'
 import type { ColorObject } from '@/types'
+import { watch } from 'vue'
 
 const palette = useStore($colorPalette)
+const showPalette = useStore($showPalette)
+
+const paletteHeight = ref()
+const paletteRef = ref()
+
+watch(showPalette, (val) => {
+	if (val === true) {
+		paletteHeight.value = paletteRef.value.clientHeight
+
+		paletteRef.value.style.marginTop = '0'
+
+		setTimeout(() => {
+			paletteRef.value.classList.remove('palette-hidden')
+		}, 200)
+		return paletteHeight.value
+	} else {
+		paletteRef.value.style.marginTop = `-${paletteHeight.value}px`
+		paletteRef.value.classList.add('palette-hidden')
+	}
+})
 
 const selected: ColorObject[] = []
 
@@ -56,7 +79,7 @@ const handleClearPalette = () => {
 @import '../../styles/button.scss';
 .palette {
 	// grid  grid-cols-5
-	@apply mt-4 flex translate-y-0 flex-col   gap-5 border-t border-neutral-300 pt-1 transition-all;
+	@apply mt-4 flex translate-y-0 flex-col gap-5 border-t border-neutral-300 pt-1 transition-all;
 
 	.palette-colors {
 		z-index: 1;
@@ -66,5 +89,10 @@ const handleClearPalette = () => {
 	.palette-actions {
 		@apply flex justify-between;
 	}
+}
+
+.palette-hidden {
+	z-index: -1;
+	@apply opacity-0;
 }
 </style>

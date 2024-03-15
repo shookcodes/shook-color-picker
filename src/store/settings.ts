@@ -17,7 +17,7 @@ export const $selectedFormats = persistentAtom<ColorFormatBooleans>(
 	}
 )
 
-export const $showPalette = persistentAtom<Boolean>('shookShowPaletteSetting', false, {
+export const $showPalette = persistentAtom<boolean>('shookShowPaletteSetting', false, {
 	encode: JSON.stringify,
 	decode: JSON.parse
 })
@@ -33,8 +33,6 @@ export const $settings = persistentAtom<ColorPickerSettings>(
 		decode: JSON.parse
 	}
 )
-
-console.log('TES', $settings.get())
 
 export const updateFormats = {
 	colorModel: ({ format, value }: { format: ColorFormatOption; value: boolean }) => {
