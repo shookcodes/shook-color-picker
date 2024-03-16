@@ -47,9 +47,12 @@ import ColorPalette from '@palette/ColorPalette.vue'
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 
+			const getTheme = () => $theme.get()
 			const theme = `theme-${$theme.get()}`
 
 			this.classList.add(theme)
+
+			// const themeChange = $theme.get() as
 
 			const { canvas, marker } = setCanvas({ wrapper, hue: slider.value })
 

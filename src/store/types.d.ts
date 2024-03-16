@@ -1,4 +1,4 @@
-export type { ColorFormatOption, ColorPickerTheme } from '@/types'
+export type { ColorFormatOption, ColorPickerTheme, ColorPickerThemeOption } from '@/types'
 
 export type ColorStore = ColorObject[]
 export type PaletteAction = 'add' | 'delete' | 'remove'

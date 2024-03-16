@@ -1,4 +1,5 @@
 import { persistentAtom } from '@nanostores/persistent'
+import { watch, computed } from 'vue'
 import type {
 	ColorPickerSettings,
 	ColorFormatBooleans,
@@ -22,7 +23,9 @@ export const $selectedFormats = persistentAtom<ColorFormatBooleans>(
 	}
 )
 
-export const $theme = persistentAtom<ColorPickerThemeOption>('shookDarkMode', 'light', {
+const initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+
+export const $theme = persistentAtom<ColorPickerThemeOption>('shookDarkMode', initialTheme, {
 	encode: JSON.stringify,
 	decode: JSON.parse
 })
@@ -67,3 +70,8 @@ export const setTheme = (value: ColorPickerThemeOption) => {
 	el.classList.remove(current)
 	el.classList.add(`theme-${value}`)
 }
+
+// Update theme if user changes OS settings
+window
+	.matchMedia('(prefers-color-scheme: dark)')
+	.addEventListener('change', (event) => (event.matches ? setTheme('dark') : setTheme('light')))

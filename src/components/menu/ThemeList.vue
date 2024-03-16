@@ -5,13 +5,6 @@
 			<div class="theme-group-item">
 				<input
 					type="radio"
-					id="radio-theme-default"
-					@input="handleUpdateTheme('default')"
-					name="theme-select" /><label for="theme-default">Default</label>
-			</div>
-			<div class="theme-group-item">
-				<input
-					type="radio"
 					id="radio-theme-dark"
 					@input="handleUpdateTheme('dark')"
 					name="theme-select" /><label for="theme-dark">Dark</label>
@@ -30,7 +23,7 @@
 import { ref, onMounted } from 'vue'
 
 import { $theme, setTheme } from '@store/settings'
-import type { ColorPickerTheme } from '@store/types'
+import type { ColorPickerThemeOption } from '@store/types'
 
 import { useStore } from '@nanostores/vue'
 
@@ -38,12 +31,13 @@ const theme = useStore($theme)
 
 const themeGroup = ref()
 
-const handleUpdateTheme = (value: ColorPickerTheme) => {
+const handleUpdateTheme = (value: ColorPickerThemeOption) => {
 	setTheme(value)
 }
 
 onMounted(() => {
-	const initialThemeEl = themeGroup.value.querySelector(`#radio-theme-${theme.value}`)
+	const initialThemeEl =
+		themeGroup.value && themeGroup.value.querySelector(`#radio-theme-${theme.value}`)
 	initialThemeEl.checked = true
 })
 </script>
