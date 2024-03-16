@@ -112,11 +112,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
-	@apply flex flex-col gap-4 pt-1 transition-all;
+	@apply flex flex-col gap-4  transition-all;
 
 	.palette-colors {
 		z-index: 1;
-		@apply mt-2 grid grid-cols-6 gap-2.5;
+		@apply mt-3 grid grid-cols-6 gap-2.5;
 	}
 
 	.palette-actions {
@@ -126,6 +126,6 @@ onMounted(() => {
 
 .palette-hidden {
 	z-index: -1;
-	@apply -mb-3 pt-0 opacity-0;
+	@apply -mb-4 pt-0 opacity-0;
 }
 </style>
