@@ -8,7 +8,7 @@
 				ariaLabel="add the color to the color palette"
 				className="button-add-active-color "
 				@click="addColorToPalette"
-				>Add Color
+				><span>Add Color</span>
 				<AddSvg />
 			</Button>
 			<span
@@ -45,7 +45,7 @@ const error = ref(false)
 const setShowButton = (show: boolean) => {
 	if (show === true) {
 		addButtonEl.value.style.marginRight = '0'
-		addButtonEl.value.style.marginLeft = '8px'
+		addButtonEl.value.style.marginLeft = '12px'
 		setTimeout(() => {
 			addButtonEl.value.classList.remove('button-hidden')
 		}, 200)
@@ -89,7 +89,7 @@ const addColorToPalette = () => {
 }
 
 .active-color-grid {
-	@apply relative flex h-11 items-center;
+	@apply relative my-2 flex items-center;
 }
 
 .active-color-message {
@@ -101,6 +101,12 @@ const addColorToPalette = () => {
 }
 
 .active-color-preview {
-	@apply h-7 w-full flex-1 rounded-md  shadow-sm transition-all ease-in-out;
+	@apply h-8 w-full flex-1 rounded-md border-2 border-neutral-100  shadow-md transition-all ease-in-out;
+}
+
+.theme-dark {
+	.active-color-preview {
+		@apply border-neutral-400;
+	}
 }
 </style>

@@ -39,10 +39,14 @@ button:disabled {
 }
 
 .button-add-active-color {
-	@apply flex h-7 w-20 flex-grow items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 transition-all duration-500 ease-in-out;
+	@apply flex h-8 w-20 flex-grow items-center justify-center gap-2 whitespace-nowrap rounded-md px-4 transition-all duration-500 ease-in-out;
+
+	& span {
+		@apply leading-none;
+	}
 
 	&.icon {
-		@apply ml-1.5 h-3  w-3 p-0 transition-all duration-500;
+		@apply ml-1.5 aspect-square h-full p-0 transition-all duration-500;
 	}
 
 	&.button-hidden {
@@ -54,7 +58,7 @@ button:disabled {
 }
 
 .button-palette-action {
-	@apply w-max rounded  px-2 py-[1px] text-sm;
+	@apply w-max rounded  px-2 py-[1px] text-sm shadow-md;
 
 	&.clear-palette {
 		color: $error;

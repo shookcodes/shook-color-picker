@@ -57,7 +57,7 @@ input[type='text'] {
 		@apply relative flex aspect-square w-full items-center justify-center border-none bg-transparent transition-all;
 
 		label {
-			@apply flex aspect-square min-w-full items-center justify-center rounded-md border-2 border-neutral-100 hover:cursor-pointer;
+			@apply flex aspect-square min-w-full items-center justify-center rounded-md border border-neutral-100 hover:cursor-pointer;
 		}
 
 		.icon {
@@ -73,10 +73,8 @@ input[type='text'] {
 	}
 
 	.checkbox-palette {
-		@apply relative flex aspect-square w-full items-center justify-center border-none bg-transparent transition-all;
-
 		label {
-			@apply flex aspect-square min-w-full items-center justify-center rounded-md border-2 border-neutral-400 hover:cursor-pointer;
+			@apply border-neutral-400;
 		}
 	}
 }
