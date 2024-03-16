@@ -1,5 +1,5 @@
 import { _scrubHex } from './_scrubHex'
-
+import type { FormatObjectReturn } from './types'
 export const hexToRgb = (hex: string): FormatObjectReturn | Error => {
 	if (!hex) return new Error('No string provided.')
 	hex = '0x' + _scrubHex(hex)

@@ -1,4 +1,6 @@
 import { hexToRgb } from './convertFromHex'
+import type { FormatObjectReturn } from './types'
+
 export const getLightDarkValues = ({
 	hex,
 	light,
@@ -12,11 +14,13 @@ export const getLightDarkValues = ({
 }) => {
 	light = light ? light : '#f7f7f7'
 	dark = dark ? dark : '#212121'
-	// invert = invert ? invert : false
+
 	const { arr: rgbArr } = hexToRgb(hex) as FormatObjectReturn
 
 	if (!rgbArr) throw new Error('Incorrect values provided for RGB calculation')
-	const [r, g, b] = rgbArr.map((val) => (typeof val === 'string' ? parseInt(val) : val))
+	const [r, g, b] = rgbArr.map((val: number | string) =>
+		typeof val === 'string' ? parseInt(val) : val
+	)
 
 	const breakpoint = (value: number, point: number) => {
 		return Math.round(value * point)
