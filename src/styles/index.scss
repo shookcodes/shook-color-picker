@@ -6,7 +6,6 @@
 @import './button.scss';
 @import './input.scss';
 @import './typography.scss';
-@import './theme.scss';
 
 :root {
 	@apply text-neutral-600;
@@ -43,14 +42,8 @@ body > * {
 	}
 }
 
-.theme-default {
-	&.background,
-	.background {
-		&::after {
-			content: '';
-			background: $bgLight;
-		}
-	}
+.border-top {
+	@apply border-t border-neutral-300;
 }
 
 .theme-light {
@@ -61,14 +54,10 @@ body > * {
 			background: $bgLight;
 		}
 	}
-
-	input[type='text'] {
-		outline: 1px solid #ccc;
-	}
 }
 
 .theme-dark {
-	@apply text-neutral-100;
+	@apply text-neutral-200;
 
 	&.background,
 	.background {
@@ -81,5 +70,9 @@ body > * {
 	input[type='text'] {
 		outline: 1px solid #161616;
 		background: $bgDark;
+	}
+
+	.border-top {
+		@apply border-t border-neutral-700;
 	}
 }

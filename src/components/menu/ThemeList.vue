@@ -1,6 +1,6 @@
 <template>
 	<fieldset id="settings-option-theme" class="flex flex-col">
-		<legend>Theme</legend>
+		<legend class="border-top">Theme</legend>
 		<div class="theme-group" ref="themeGroup">
 			<div class="theme-group-item">
 				<input
@@ -43,10 +43,10 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 #settings-option-theme {
-	@apply flex px-3  text-indigo-800 transition-colors;
+	@apply flex px-3 text-inherit transition-colors;
 
 	span {
-		@apply border-t border-neutral-300 pt-2 font-semibold;
+		@apply pt-2 font-semibold;
 	}
 
 	& .theme-group {

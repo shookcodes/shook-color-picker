@@ -1,5 +1,4 @@
 import { persistentAtom } from '@nanostores/persistent'
-import { watch, computed } from 'vue'
 import type {
 	ColorPickerSettings,
 	ColorFormatBooleans,

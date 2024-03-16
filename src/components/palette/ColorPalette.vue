@@ -1,5 +1,5 @@
 <template>
-	<div class="palette" ref="paletteRef">
+	<div class="palette border-top" ref="paletteRef">
 		<div class="palette-colors">
 			<div v-for="(color, index) in palette">
 				<PaletteItem
@@ -23,7 +23,7 @@
 	</div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
 import { $colorPalette, updatePalette } from '@store/colors'
@@ -79,7 +79,7 @@ const handleClearPalette = () => {
 @import '../../styles/button.scss';
 .palette {
 	// grid  grid-cols-5
-	@apply mt-4 flex translate-y-0 flex-col gap-5 border-t border-neutral-300 pt-1 transition-all;
+	@apply mt-4 flex translate-y-0 flex-col gap-5 pt-1 transition-all;
 
 	.palette-colors {
 		z-index: 1;

@@ -14,7 +14,7 @@ button:disabled {
 }
 
 .button-icon {
-	@apply h-5 w-5 bg-transparent text-indigo-700 shadow-none;
+	@apply h-5 w-5 bg-transparent text-indigo-700 shadow-none transition-colors;
 
 	&:hover {
 		@apply bg-transparent text-indigo-400;
@@ -35,6 +35,32 @@ button:disabled {
 
 	.icon {
 		@apply pointer-events-none;
+	}
+}
+
+.theme-dark {
+	button {
+		@apply bg-indigo-600 text-indigo-100;
+
+		&:hover {
+			@apply bg-indigo-700 text-indigo-200;
+		}
+	}
+
+	.button-icon {
+		@apply bg-transparent text-indigo-400;
+
+		&:hover {
+			@apply bg-transparent text-indigo-300;
+		}
+	}
+
+	.button-menu-bar {
+		@apply bg-transparent text-indigo-400;
+
+		&:hover {
+			@apply bg-transparent text-indigo-300;
+		}
 	}
 }
 

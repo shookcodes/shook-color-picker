@@ -47,12 +47,9 @@ import ColorPalette from '@palette/ColorPalette.vue'
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
 
-			const getTheme = () => $theme.get()
 			const theme = `theme-${$theme.get()}`
 
 			this.classList.add(theme)
-
-			// const themeChange = $theme.get() as
 
 			const { canvas, marker } = setCanvas({ wrapper, hue: slider.value })
 
@@ -100,8 +97,8 @@ import ColorPalette from '@palette/ColorPalette.vue'
 </script>
 
 <style lang="scss">
+	@import '../styles/index.scss';
 	@import '../styles/variables.scss';
-	@import '../styles/theme.scss';
 	.shook-color-picker {
 		display: flex;
 		flex-direction: column;
@@ -123,10 +120,12 @@ import ColorPalette from '@palette/ColorPalette.vue'
 			position: relative;
 			width: 100%;
 			height: 100%;
-			max-height: 200px;
+			height: 160px;
+		}
 
-			outline: 1px solid #e6e6e6;
-			border-radius: 0.2rem;
+		canvas {
+			height: 160px;
+			@apply rounded-md border border-neutral-100;
 		}
 
 		.color-marker {
@@ -147,6 +146,12 @@ import ColorPalette from '@palette/ColorPalette.vue'
 
 		span {
 			@apply text-neutral-700;
+		}
+
+		&.theme-dark {
+			canvas {
+				@apply border-neutral-700;
+			}
 		}
 	}
 </style>

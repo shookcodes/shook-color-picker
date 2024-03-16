@@ -1,5 +1,5 @@
 <template>
-	<div ref="dropdown" class="settings-dropdown-wrapper">
+	<div ref="dropdown" class="settings-dropdown-wrapper" :class="`theme-${theme}`">
 		<Button
 			ariaLabel="click to toggle color picker settings"
 			className="button-menu-bar settings-button"
@@ -62,15 +62,16 @@ import {
 	updateShowPalette,
 	updateFormats
 } from '@store/settings'
-import type { ColorFormatOption } from '../../types'
-
 import { useStore } from '@nanostores/vue'
+import type { ColorFormatOption } from '../../types'
 
 interface Props {
 	className?: string
 }
 
 defineProps<Props>()
+
+const theme = useStore($theme)
 
 const formats = useStore($selectedFormats)
 const showPalette = useStore($showPalette)
@@ -121,11 +122,11 @@ onMounted(() => {
 
 .settings-dropdown {
 	background: $bgLight;
-	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md  py-2 shadow-md transition-all;
+	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md  py-2 text-indigo-800 shadow-md transition-all;
 }
 
 .settings-dropdown-li {
-	@apply relative z-10 flex items-center gap-2 px-3 text-indigo-800 transition-colors;
+	@apply relative z-10 flex items-center gap-2 px-3  transition-colors;
 
 	.checkbox,
 	& span {
@@ -144,30 +145,13 @@ onMounted(() => {
 	}
 }
 
-.theme-light {
-	.settings-dropdown {
-		background: $bgLight;
-	}
-
-	.settings-dropdown-li {
-		@apply text-indigo-800;
-
-		&:hover {
-			&::after {
-				@apply bg-indigo-200;
-			}
-		}
-	}
-}
-
 .theme-dark {
 	.settings-dropdown {
 		background: $bgDark;
+		@apply text-indigo-400;
 	}
 
 	.settings-dropdown-li {
-		@apply text-indigo-400;
-
 		&:hover {
 			&::after {
 				@apply bg-indigo-800;

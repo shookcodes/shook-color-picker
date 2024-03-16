@@ -1,3 +1,8 @@
+@import './variables.scss';
+input[type='text'] {
+	outline: 1px solid #cccccc;
+}
+
 .color-input {
 	z-index: auto;
 	@apply relative z-0 h-14 transition-all ease-linear;
@@ -59,6 +64,21 @@
 
 		.icon {
 			@apply pointer-events-none absolute inset-0  m-auto h-auto w-9/12 transition-colors;
+		}
+	}
+}
+
+.theme-dark {
+	input[type='text'] {
+		outline: 1px solid #161616;
+		background: $bgDark;
+	}
+
+	.checkbox-palette {
+		@apply relative flex aspect-square w-full items-center justify-center border-none bg-transparent transition-all;
+
+		label {
+			@apply flex aspect-square min-w-full items-center justify-center rounded-md border-2 border-neutral-400 hover:cursor-pointer;
 		}
 	}
 }
