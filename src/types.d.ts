@@ -64,3 +64,16 @@ export interface CMYKObject {
 export type ColorFunctionReturn = ColorObject | void
 
 export type FormatObjectReturn = { string: string; arr?: string[] | number[] }
+
+export type ColorPickerThemeDefault = 'default'
+export type ColorPickerThemeDark = 'dark'
+export type ColorPickerThemeLight = 'light'
+
+export type ColorPickerThemeOption =
+	| ColorPickerThemeDefault
+	| ColorPickerThemeDark
+	| ColorPickerThemeLight
+
+export interface ColorPickerTheme {
+	[key: ColorPickerThemeOption]
+}

@@ -32,7 +32,8 @@ import ColorPalette from '@palette/ColorPalette.vue'
 <script>
 	import { setCanvas, getCursorPoint } from '@utils/colorPicker'
 	import { updateColorValues } from '@utils/convertColor'
-	import { setCurrentColor } from '../store/colors'
+	import { setCurrentColor } from '@store/colors'
+	import { $theme } from '@/store/settings'
 
 	import type { ColorObject, CursorCoordinates } from '../types'
 
@@ -45,6 +46,10 @@ import ColorPalette from '@palette/ColorPalette.vue'
 			const slider: HTMLInputElement = this.querySelector('.color-slider')!
 			const tooltip: HTMLDivElement = this.querySelector('.tooltip-color')!
 			const tooltipText: HTMLSpanElement = tooltip.querySelector('.tooltip-color-text')!
+
+			const theme = `theme-${$theme.get()}`
+
+			this.classList.add(theme)
 
 			const { canvas, marker } = setCanvas({ wrapper, hue: slider.value })
 
@@ -93,6 +98,7 @@ import ColorPalette from '@palette/ColorPalette.vue'
 
 <style lang="scss">
 	@import '../styles/variables.scss';
+	@import '../styles/theme.scss';
 	.shook-color-picker {
 		display: flex;
 		flex-direction: column;

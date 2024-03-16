@@ -2,12 +2,23 @@
 import SettingsDropdown from './menu/SettingsDropdown.vue'
 ---
 
-<div class="menu-bar">
+<color-picker-menu class="menu-bar">
 	<div class="menu-items background background-small">
-		<SettingsDropdown client:only="vue" />
+		<SettingsDropdown client:only="vue" :className="background" />
 	</div>
-</div>
+</color-picker-menu>
+<script>
+	import { $theme } from '@/store/settings'
+	class ColorPickerMenu extends HTMLElement {
+		constructor() {
+			super()
+			const theme = `theme-${$theme.get()}`
 
+			this.classList.add(theme)
+		}
+	}
+	customElements.define('color-picker-menu', ColorPickerMenu)
+</script>
 <style lang="scss">
 	@import '../styles/variables.scss';
 

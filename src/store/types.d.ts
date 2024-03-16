@@ -1,4 +1,4 @@
-export type { ColorFormatOption } from '@/types'
+export type { ColorFormatOption, ColorPickerTheme } from '@/types'
 
 export type ColorStore = ColorObject[]
 export type PaletteAction = 'add' | 'delete' | 'remove'
@@ -13,8 +13,6 @@ export interface ColorFormatBooleans {
 	hsl: boolean
 	cmyk: boolean
 }
-
-export type ColorPickerTheme = 'default' | 'dark' | 'light'
 
 export interface ColorPickerSettings {
 	formats: ColorFormatBooleans

@@ -20,3 +20,66 @@ svg {
 body > * {
 	@apply m-0 p-0;
 }
+
+.background {
+	padding: 0.75rem;
+	box-shadow: 2px 2px 8px rgba(106, 106, 106, 0.3);
+	@apply relative bg-transparent;
+
+	&::after {
+		z-index: -1;
+		opacity: 0.75;
+		@apply absolute inset-0 h-full w-full rounded-md;
+	}
+
+	& .background-small {
+		padding: 2px;
+
+		&::after {
+			content: '';
+
+			@apply rounded;
+		}
+	}
+}
+
+.theme-default {
+	&.background,
+	.background {
+		&::after {
+			content: '';
+			background: $bgLight;
+		}
+	}
+}
+
+.theme-light {
+	&.background,
+	.background {
+		&::after {
+			content: '';
+			background: $bgLight;
+		}
+	}
+
+	input[type='text'] {
+		outline: 1px solid #ccc;
+	}
+}
+
+.theme-dark {
+	@apply text-neutral-100;
+
+	&.background,
+	.background {
+		&::after {
+			content: '';
+			background: $bgDark;
+		}
+	}
+
+	input[type='text'] {
+		outline: 1px solid #161616;
+		background: $bgDark;
+	}
+}
