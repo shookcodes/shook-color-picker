@@ -17,6 +17,13 @@ export const setCurrentColor = (color: ColorObject): void => {
 	return $currentColor.set({ ...color })
 }
 
+export const $sliderValue = persistentAtom<number>('shookSliderValue', 180, {
+	encode: JSON.stringify,
+	decode: JSON.parse
+})
+
+export const setSliderValue = (value: number) => $sliderValue.set(value)
+
 export const $colorPalette = persistentAtom<ColorObject[]>('shookColorPickerColors', [], {
 	encode: JSON.stringify,
 	decode: JSON.parse
