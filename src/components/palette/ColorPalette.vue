@@ -16,9 +16,9 @@
 				@click="handleClearPalette"
 				>Clear Palette</Button
 			>
-			<Button className="button-palette-action save-palette" ariaLabel="save palette colors"
+			<!-- <Button className="button-palette-action save-palette" ariaLabel="save palette colors"
 				>Save Palette</Button
-			>
+			> -->
 		</div>
 	</div>
 </template>

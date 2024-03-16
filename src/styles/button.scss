@@ -38,32 +38,6 @@ button:disabled {
 	}
 }
 
-.theme-dark {
-	button {
-		@apply bg-indigo-600 text-indigo-100;
-
-		&:hover {
-			@apply bg-indigo-700 text-indigo-200;
-		}
-	}
-
-	.button-icon {
-		@apply bg-transparent text-indigo-400;
-
-		&:hover {
-			@apply bg-transparent text-indigo-300;
-		}
-	}
-
-	.button-menu-bar {
-		@apply bg-transparent text-indigo-400;
-
-		&:hover {
-			@apply bg-transparent text-indigo-300;
-		}
-	}
-}
-
 .button-add-active-color {
 	@apply flex h-7 w-20 flex-grow items-center justify-center gap-2 whitespace-nowrap rounded-md  px-4 transition-all duration-500 ease-in-out;
 
@@ -101,6 +75,55 @@ button:disabled {
 			}
 
 			@apply transition-all;
+		}
+	}
+}
+
+.theme-dark {
+	button {
+		@apply bg-indigo-600 text-indigo-100;
+
+		&:hover {
+			@apply bg-indigo-700 text-indigo-200;
+		}
+	}
+
+	.button-icon {
+		@apply bg-transparent text-indigo-400;
+
+		&:hover {
+			@apply bg-transparent text-indigo-300;
+		}
+	}
+
+	.button-menu-bar {
+		@apply bg-transparent text-indigo-400;
+
+		&:hover {
+			@apply bg-transparent text-indigo-300;
+		}
+	}
+
+	.button-palette-action {
+		&.clear-palette {
+			@apply relative  bg-red-800 text-red-100;
+
+			&:before {
+				content: '';
+				border: 1px solid transparent;
+				z-index: -1;
+				@apply absolute inset-0 h-full w-full rounded transition-all duration-300;
+			}
+
+			&:hover {
+				@apply bg-red-900 text-red-200;
+				&:before {
+					border: 1px solid rgba($error, 0.7);
+					opacity: 0.7;
+				}
+
+				@apply transition-all;
+			}
 		}
 	}
 }
