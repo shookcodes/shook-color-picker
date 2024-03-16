@@ -6,7 +6,7 @@
 		@click="handleCheck"
 		:checkStyle="checkStyle"
 		:labelStyle="{ background: color.hex }"
-		className="checkbox-palette"
+		className="checkbox-palette z-10"
 		:checked="isChecked" />
 </template>
 <script setup lang="ts">
