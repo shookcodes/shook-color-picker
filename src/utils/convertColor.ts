@@ -223,10 +223,10 @@ const toggleColor = ({
 	const res = parseInt((r1 + g1 + b1).toFixed(2))
 
 	if (invert === true) {
-		return res < 160 ? dark : light
+		return res < 160 ? { dark } : { light }
 	}
 
-	return res > 160 ? dark : light
+	return res > 160 ? { dark } : { light }
 }
 
 export { hslToRgb, hslToHex, hexToHsl, hexToRgb, hexToCmyk, updateColorValues, toggleColor }

@@ -39,9 +39,10 @@ const handleCheck = () => {
 const checkStyle = computed(() => {
 	const { hex } = color
 
-	const fill = isChecked.value === true ? toggleColor({ hex }) : 'transparent'
+	const fill = isChecked.value === true ? Object.values(toggleColor({ hex }))[0] : 'transparent'
 
-	const stroke = isChecked.value === true ? toggleColor({ hex, invert: true }) : 'transparent'
+	const stroke =
+		isChecked.value === true ? Object.values(toggleColor({ hex, invert: true }))[0] : 'transparent'
 
 	return {
 		color: fill,
