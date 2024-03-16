@@ -1,27 +1,29 @@
 <template>
 	<fieldset id="settings-option-theme" class="flex flex-col">
-		<legend class="border-top">Theme</legend>
+		<legend class="border-top w-full pb-2 font-semibold">Theme</legend>
 		<div class="theme-group" ref="themeGroup">
-			<div class="theme-group-item">
-				<input
-					type="radio"
-					id="radio-theme-dark"
-					@input="handleUpdateTheme('dark')"
-					name="theme-select" /><label for="theme-dark">Dark</label>
-			</div>
-			<div class="theme-group-item">
-				<input
-					type="radio"
-					id="radio-theme-light"
-					@input="handleUpdateTheme('light')"
-					name="theme-select" /><label for="theme-light">Light</label>
-			</div>
+			<Radio
+				id="radio-theme-dark"
+				ariaLabel="dark option for theme"
+				name="theme-select"
+				:selected="theme === 'dark' ? true : false"
+				label="Dark"
+				value="dark"
+				@click="(value) => updateSelectedTheme(value)" />
+			<Radio
+				id="radio-theme-light"
+				ariaLabel="light option for theme"
+				name="theme-select"
+				:selected="theme === 'light' ? true : false"
+				label="Light"
+				value="light"
+				@click="(value) => updateSelectedTheme(value)" />
 		</div>
 	</fieldset>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-
+import { ref } from 'vue'
+import Radio from '@global/Radio.vue'
 import { $theme, setTheme } from '@store/settings'
 import type { ColorPickerThemeOption } from '@store/types'
 
@@ -31,30 +33,22 @@ const theme = useStore($theme)
 
 const themeGroup = ref()
 
-const handleUpdateTheme = (value: ColorPickerThemeOption) => {
+const updateSelectedTheme = (value: ColorPickerThemeOption) => {
 	setTheme(value)
 }
-
-onMounted(() => {
-	const initialThemeEl =
-		themeGroup.value && themeGroup.value.querySelector(`#radio-theme-${theme.value}`)
-	initialThemeEl.checked = true
-})
 </script>
 <style lang="scss" scoped>
 #settings-option-theme {
 	@apply flex px-3 text-inherit transition-colors;
 
-	span {
-		@apply pt-2 font-semibold;
-	}
-
 	& .theme-group {
 		@apply flex flex-col gap-0.5;
+	}
+}
 
-		& .theme-group-item {
-			@apply flex items-center gap-1.5;
-		}
+.theme-dark {
+	.border-top {
+		@apply border-neutral-700;
 	}
 }
 </style>

@@ -33,6 +33,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import ColorInput from '@global/ColorInput.vue'
+
 import { $currentColor } from '@store/colors'
 import { $selectedFormats } from '@store/settings'
 import { useStore } from '@nanostores/vue'
