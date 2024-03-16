@@ -1,5 +1,6 @@
 <template>
 	<div class="palette" ref="paletteRef">
+		<span class="palette-title">Palette</span>
 		<div class="palette-colors">
 			<div v-for="(color, index) in palette">
 				<PaletteItem
@@ -112,11 +113,16 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
-	@apply border-top flex flex-col  gap-4 transition-all;
+	@apply border-top flex flex-col  transition-all;
+
+	.palette-title {
+		@apply pb-1 pt-2 text-sm;
+	}
 
 	.palette-colors {
 		z-index: 1;
-		@apply mt-3 grid grid-cols-6 gap-2.5;
+		background: rgba($light, 0.8);
+		@apply mb-5 grid grid-cols-5 gap-3.5 rounded-md px-1.5 pb-1.5 pt-1;
 	}
 
 	.palette-actions {
@@ -127,5 +133,11 @@ onMounted(() => {
 .palette-hidden {
 	z-index: -1;
 	@apply -mb-4 pt-0 opacity-0;
+}
+
+.theme-dark {
+	.palette-colors {
+		background: rgba($dark, 0.4);
+	}
 }
 </style>

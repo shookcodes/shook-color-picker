@@ -17,6 +17,7 @@
 			:class="checked ? '' : 'text-transparent'"
 			:style="checkMarkStyle" />
 	</div>
+	<!-- <CheckSvg /> -->
 </template>
 
 <script setup lang="ts">

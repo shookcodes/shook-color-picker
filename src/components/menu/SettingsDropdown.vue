@@ -121,8 +121,8 @@ onMounted(() => {
 }
 
 .settings-dropdown {
-	background: $light;
-	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md  py-2 text-indigo-800 shadow-md transition-all;
+	background: rgba($light, 0.95);
+	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md   py-2 text-indigo-800 shadow-md transition-all;
 }
 
 .settings-dropdown-li {
@@ -147,8 +147,8 @@ onMounted(() => {
 
 .theme-dark {
 	.settings-dropdown {
-		background: $dark;
-		@apply text-indigo-400;
+		background: rgba($dark, 0.95);
+		@apply text-indigo-300;
 	}
 
 	.settings-dropdown-li {
