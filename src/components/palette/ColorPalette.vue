@@ -126,6 +126,6 @@ onMounted(() => {
 
 .palette-hidden {
 	z-index: -1;
-	@apply -mb-2 pt-0 opacity-0;
+	@apply -mb-3 pt-0 opacity-0;
 }
 </style>
