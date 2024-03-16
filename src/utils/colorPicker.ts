@@ -1,4 +1,4 @@
-import { updateColorValues } from './convertColor'
+import { setColorValues } from './colors'
 import type { DrawCanvas, CanvasProps, ColorObject, CursorCoordinates } from '../types'
 
 const getColorAtPosition = (
@@ -16,7 +16,7 @@ const getColorAtPosition = (
 
 	const currentHex = `#${toHex(imageData[0])}${toHex(imageData[1])}${toHex(imageData[2])}`
 
-	const color = updateColorValues({ hex: currentHex }) as ColorObject
+	const color = setColorValues({ hex: currentHex }) as ColorObject
 
 	const isEmpty = Object.values(color).every((x) => x === null || x === '')
 

@@ -18,7 +18,7 @@ import { onMounted, ref } from 'vue'
 import Tooltip from './Tooltip.vue'
 import ColorMarker from './ColorMarker.vue'
 import { getCursorPoint, getColorAtPosition } from '@utils/colorPicker'
-import { updateColorValues } from '@utils/convertColor'
+import { setColorValues } from '@utils/colors'
 import { setCanvas } from '@/utils/colorPicker'
 import { $sliderValue, setCurrentColor } from '@/store/colors'
 import { useStore } from '@nanostores/vue'
@@ -93,7 +93,7 @@ const handleCanvasClick = (e: MouseEvent) => {
 	// Set marker fill color
 	currentHex.value = hex
 	// Get color object based on hex value and set the new object to the store.
-	const color = updateColorValues({ hex })
+	const color = setColorValues({ hex })
 	setCurrentColor(color)
 	return color
 }

@@ -7,7 +7,7 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, computed, watch } from 'vue'
-import { toggleColor } from '@utils/convertColor'
+import { getLightDarkValues } from '@utils/colors'
 
 interface Props {
 	markerColor: string
@@ -27,7 +27,9 @@ const markerFill = computed(() => {
 
 	if (props.markerColor) {
 		// Set marker outlines based on canvas color selected on click event.
-		const toggleVariant = Object.keys(toggleColor({ hex: props.markerColor, light, dark }))[0]
+		const toggleVariant = Object.keys(
+			getLightDarkValues({ hex: props.markerColor, light, dark })
+		)[0]
 
 		if (toggleVariant === 'light') {
 			marker.value.classList.remove('marker-dark')

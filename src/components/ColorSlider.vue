@@ -6,13 +6,13 @@
 		class="color-slider"
 		min="0"
 		max="360"
-		aria-label="update the hue value by sliding the range"
+		aria-label="@/utils/colors/convertColore by sliding the range"
 		@input="(e: Event) => handleSliderUpdate(e.target as HTMLInputElement)" />
 </template>
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { setCanvas } from '@utils/colorPicker'
-import { updateColorValues } from '@utils/convertColor'
+import { setColorValues } from '@utils/colors'
 import { setCurrentColor, setSliderValue } from '@store/colors'
 
 interface Props {
@@ -45,7 +45,7 @@ const handleSliderUpdate = (target: HTMLInputElement) => {
 		hue
 	})
 
-	const color = updateColorValues({ hue })
+	const color = setColorValues({ hue })
 	setSliderValue(hue)
 	setCurrentColor(color)
 }

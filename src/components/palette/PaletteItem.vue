@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { toggleColor } from '@utils/convertColor'
+import { getLightDarkValues } from '@utils/colors'
 import type { ColorObject } from '../../types'
 import CheckBox from '@global/CheckBox.vue'
 interface Props {
@@ -39,10 +39,13 @@ const handleCheck = () => {
 const checkStyle = computed(() => {
 	const { hex } = color
 
-	const fill = isChecked.value === true ? Object.values(toggleColor({ hex }))[0] : 'transparent'
+	const fill =
+		isChecked.value === true ? Object.values(getLightDarkValues({ hex }))[0] : 'transparent'
 
 	const stroke =
-		isChecked.value === true ? Object.values(toggleColor({ hex, invert: true }))[0] : 'transparent'
+		isChecked.value === true
+			? Object.values(getLightDarkValues({ hex, invert: true }))[0]
+			: 'transparent'
 
 	return {
 		color: fill,
