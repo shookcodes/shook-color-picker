@@ -45,13 +45,13 @@
 					>Show Palette</span
 				>
 			</li>
-			<ThemeList />
+			<ThemeToggle />
 		</ol>
 	</div>
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import ThemeList from './ThemeList.vue'
+import ThemeToggle from './ThemeToggle.vue'
 import Button from '@global/Button.vue'
 import CheckBox from '@global/CheckBox.vue'
 import SettingsSvg from '@icons/settings.svg?component'
@@ -121,7 +121,7 @@ onMounted(() => {
 }
 
 .settings-dropdown {
-	background: $bgLight;
+	background: $light;
 	@apply absolute top-1 mt-6 flex w-max flex-col gap-2 rounded-md  py-2 text-indigo-800 shadow-md transition-all;
 }
 
@@ -147,7 +147,7 @@ onMounted(() => {
 
 .theme-dark {
 	.settings-dropdown {
-		background: $bgDark;
+		background: $dark;
 		@apply text-indigo-400;
 	}
 

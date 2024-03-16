@@ -1,5 +1,5 @@
 <template>
-	<div class="color-inputs border-top" ref="inputGroup">
+	<div class="color-inputs" ref="inputGroup">
 		<ColorInput
 			ariaLabel="selected hex code value"
 			title="Hex"
@@ -58,7 +58,7 @@ watch(formats, () => {
 @import '../styles/input.scss';
 .color-inputs {
 	gap: 1.75rem;
-	@apply flex flex-col gap-0 overflow-hidden px-[1px] pb-3 pt-1 transition-all ease-in-out;
+	@apply border-top flex flex-col gap-0 overflow-hidden px-[1px] pb-3 pt-1 transition-all ease-in-out;
 
 	&.all-inputs-hidden {
 		@apply -mt-1 border-none pb-0;

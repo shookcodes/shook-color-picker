@@ -21,16 +21,12 @@
 	}
 }
 
-.border-top {
-	@apply border-t border-neutral-300;
-}
-
 .theme-light {
 	&.background,
 	.background {
 		&::after {
 			content: '';
-			background: $bgLight;
+			background: $light;
 		}
 	}
 }
@@ -42,16 +38,12 @@
 	.background {
 		&::after {
 			content: '';
-			background: $bgDark;
+			background: $dark;
 		}
 	}
 
 	input[type='text'] {
 		outline: 1px solid #161616;
-		background: $bgDark;
-	}
-
-	.border-top {
-		@apply border-t border-neutral-800;
+		background: $dark;
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-	<div class="palette border-top" ref="paletteRef">
+	<div class="palette" ref="paletteRef">
 		<div class="palette-colors">
 			<div v-for="(color, index) in palette">
 				<PaletteItem
@@ -112,7 +112,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
-	@apply flex flex-col gap-4  transition-all;
+	@apply border-top flex flex-col  gap-4 transition-all;
 
 	.palette-colors {
 		z-index: 1;

@@ -25,7 +25,7 @@ const hexToRgb = (hex: string): FormatObjectReturn | Error => {
 const hexToHsl = (hex: string): FormatObjectReturn | Error => {
 	if (!hex) return new Error('No string provided.')
 	// Remove the hash if it exists
-	hex = hex.replace(/^#/, '')
+	hex = _scrubHex(hex)
 
 	// Convert hex to RGB
 	const bigint = parseInt(hex, 16)
@@ -64,11 +64,12 @@ const hexToHsl = (hex: string): FormatObjectReturn | Error => {
 	// Convert hue to degrees
 	hue *= 60
 
-	const h = Math.round(hue)
+	const h = Math.round(hue) || 0
 	const s = Math.round(saturation * 100)
 	const l = Math.round(lightness * 100)
 
 	const string = `hsl(${h}, ${s}, ${l})`
+
 	return { string, arr: [h, s, l] }
 }
 
@@ -155,11 +156,10 @@ const hexToCmyk = (hex: string): FormatObjectReturn => {
 	const yellow = (y1 - k1) / (1 - k1)
 	const black = k1
 
-	const c = Math.round(cyan * 100)
-	const m = Math.round(magenta * 100)
-	const y = Math.round(yellow * 100)
-
-	const k = Math.round(black * 100)
+	const c = Math.round(cyan * 100) || 0
+	const m = Math.round(magenta * 100) || 0
+	const y = Math.round(yellow * 100) || 0
+	const k = Math.round(black * 100) || 0
 
 	const string = `cmyk(${c}, ${m}, ${y}, ${k})`
 

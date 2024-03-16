@@ -1,6 +1,8 @@
 <template>
 	<div ref="wrapper" class="canvas-wrapper">
-		<ColorMarker @set-marker="(value: HTMLDivElement) => (markerRef = value)" />
+		<ColorMarker
+			@set-marker="(value: HTMLDivElement) => (markerRef = value)"
+			:marker-color="currentHex" />
 		<Tooltip @set-tooltip="(value: HTMLDivElement) => (tooltipRef = value)" />
 		<canvas
 			ref="canvas"
@@ -29,6 +31,8 @@ const ctx = ref()
 const wrapper = ref()
 const tooltipRef = ref()
 const markerRef = ref()
+
+const currentHex = ref('')
 
 interface CursorValues {
 	hex: string
@@ -86,6 +90,8 @@ const handleCanvasClick = (e: MouseEvent) => {
 	markerRef.value.style.left = (left - 4 + 'px').toString()
 	markerRef.value.style.top = (top - 4 + 'px').toString()
 
+	// Set marker fill color
+	currentHex.value = hex
 	// Get color object based on hex value and set the new object to the store.
 	const color = updateColorValues({ hex })
 	setCurrentColor(color)
