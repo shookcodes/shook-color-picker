@@ -38,8 +38,11 @@ export interface CanvasProps extends Canvas2DSize {
 }
 
 export interface DrawCanvas {
-	wrapper: HTMLDivElement
-	hue: number | string
+	canvas: HTMLCanvasElement
+	width: number
+	height: number
+	// wrapper: HTMLDivElement
+	hue: number
 }
 
 export interface RGBObject {

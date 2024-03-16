@@ -1,5 +1,5 @@
 <template>
-	<div class="canvas-wrapper">
+	<div ref="wrapper" class="canvas-wrapper">
 		<ColorMarker @set-marker="(value: HTMLDivElement) => (markerRef = value)" />
 		<Tooltip @set-tooltip="(value: HTMLDivElement) => (tooltipRef = value)" />
 		<canvas
@@ -93,10 +93,15 @@ const handleCanvasClick = (e: MouseEvent) => {
 }
 
 onMounted(() => {
-	wrapper.value = canvas.value.parentElement
+	// wrapper.value = canvas.value.parentElement
 	ctx.value = canvas.value.getContext('2d')
-	setCanvas({ wrapper: wrapper.value, hue: sliderValue.value })
-	console.log('TT', tooltipRef.value)
+
+	setCanvas({
+		canvas: canvas.value,
+		width: wrapper.value.clientWidth,
+		height: wrapper.value.clientHeight,
+		hue: sliderValue.value
+	})
 })
 </script>
 <style lang="scss" scoped>

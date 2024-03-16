@@ -1,5 +1,5 @@
 ---
-import ColorPicker from '../components/ColorPicker.astro'
+import ColorPicker from '../components/ColorPicker.vue'
 import '../styles/index.scss'
 ---
 
@@ -14,7 +14,7 @@ import '../styles/index.scss'
 	>
 
 	<body>
-		<ColorPicker />
+		<ColorPicker client:only="vue" />
 	</body>
 
 	<style lang="scss" is:global>

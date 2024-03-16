@@ -112,7 +112,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
-	@apply flex translate-y-0 flex-col gap-4 pt-1 transition-all;
+	@apply flex flex-col gap-4 pt-1 transition-all;
 
 	.palette-colors {
 		z-index: 1;

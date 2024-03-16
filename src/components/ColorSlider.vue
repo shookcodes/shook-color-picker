@@ -29,12 +29,22 @@ onMounted(() => {
 	setSliderValue(parseInt(value))
 
 	wrapper.value = document.querySelector('.canvas-wrapper')
+
+	return wrapper.value
 })
 
 const handleSliderUpdate = (target: HTMLInputElement) => {
 	const hue = parseInt(target.value) as number
 
-	setCanvas({ wrapper: wrapper.value, hue })
+	const canvas = wrapper.value.querySelector('canvas')
+
+	setCanvas({
+		canvas,
+		width: wrapper.value.clientWidth,
+		height: wrapper.value.clientHeight,
+		hue
+	})
+
 	const color = updateColorValues({ hue })
 	setSliderValue(hue)
 	setCurrentColor(color)

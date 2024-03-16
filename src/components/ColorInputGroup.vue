@@ -58,10 +58,10 @@ watch(formats, () => {
 @import '../styles/input.scss';
 .color-inputs {
 	gap: 1.75rem;
-	@apply flex flex-col gap-0 overflow-hidden px-[1px] pb-2 pt-1 transition-all ease-in-out;
+	@apply flex flex-col gap-0 overflow-hidden px-[1px] pb-3 pt-1 transition-all ease-in-out;
 
 	&.all-inputs-hidden {
-		@apply -mt-2 border-none pb-0;
+		@apply -mt-1 border-none pb-0;
 	}
 }
 </style>

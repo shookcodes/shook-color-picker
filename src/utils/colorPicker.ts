@@ -26,19 +26,17 @@ const getColorAtPosition = (
 }
 
 // Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
-const setCanvas = ({ wrapper, hue }: DrawCanvas) => {
+const setCanvas = ({ canvas, width, height, hue }: DrawCanvas) => {
 	hue = typeof hue === 'string' ? parseInt(hue) : hue
-	const width = wrapper.clientWidth
-	const height = wrapper.clientHeight
 
-	const canvas: HTMLCanvasElement = wrapper.querySelector('canvas')!
-	const marker: HTMLDivElement = wrapper.querySelector('.color-marker')!
+	// const canvas: HTMLCanvasElement = document.querySelector('canvas')!
+
 	canvas.width = width
 	canvas.height = height
 
 	const ctx = setCanvasGradient({ canvas, width, height, hue })
 
-	return { canvas, ctx, marker }
+	return { canvas, ctx }
 }
 
 const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
