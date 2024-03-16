@@ -1,5 +1,5 @@
 ---
-import SettingsDropdown from './menu/SettingsDropdown.vue'
+import SettingsDropdown from './SettingsDropdown.vue'
 ---
 
 <color-picker-menu class="menu-bar">
@@ -20,7 +20,7 @@ import SettingsDropdown from './menu/SettingsDropdown.vue'
 	customElements.define('color-picker-menu', ColorPickerMenu)
 </script>
 <style lang="scss">
-	@import '../styles/variables.scss';
+	@import '../../styles/variables.scss';
 
 	.menu-bar {
 		@apply absolute -top-7 right-0 z-10 flex w-full items-center justify-end;

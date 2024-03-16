@@ -75,8 +75,6 @@ defineProps<Props>()
 const formats = useStore($selectedFormats)
 const showPalette = useStore($showPalette)
 
-const theme = useStore($theme)
-
 const showMenu = ref(false)
 const toggleButton = ref()
 const dropdown = ref()
