@@ -23,7 +23,7 @@
 	</div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
 import { $colorPalette, updatePalette } from '@store/colors'
@@ -38,8 +38,14 @@ const showPalette = useStore($showPalette)
 const paletteHeight = ref()
 const paletteRef = ref()
 
-watch(showPalette, (val) => {
-	if (val === true) {
+const getPaletteHeight = () => {
+	const { top, bottom } = paletteRef.value.getBoundingClientRect()
+
+	return bottom - top
+}
+
+const setPaletteVisibility = (value: boolean) => {
+	if (value === true) {
 		paletteHeight.value = paletteRef.value.clientHeight
 
 		paletteRef.value.style.marginTop = '0'
@@ -49,9 +55,27 @@ watch(showPalette, (val) => {
 		}, 200)
 		return paletteHeight.value
 	} else {
-		paletteRef.value.style.marginTop = `-${paletteHeight.value}px`
 		paletteRef.value.classList.add('palette-hidden')
+
+		setTimeout(() => {
+			paletteRef.value.style.marginTop = `-${getPaletteHeight()}px`
+		}, 50)
 	}
+}
+
+watch(palette, (value) => {
+	if (value.length === 0) {
+		return setPaletteVisibility(false)
+	} else {
+		setPaletteVisibility(showPalette.value)
+	}
+})
+
+watch(showPalette, (bool) => {
+	if (palette.value.length === 0) {
+		return setPaletteVisibility(false)
+	}
+	setPaletteVisibility(bool)
 })
 
 const selected: ColorObject[] = []
@@ -70,16 +94,25 @@ const updateSelectedColors = (color: ColorObject) => {
 }
 
 const handleClearPalette = () => {
-	selected.slice(0)
-	updatePalette.deleteAll()
+	setTimeout(() => {
+		updatePalette.deleteAll()
+	}, 200)
 }
+
+onMounted(() => {
+	paletteHeight.value = getPaletteHeight()
+
+	if (palette.value.length === 0) {
+		return setPaletteVisibility(false)
+	}
+	setPaletteVisibility(showPalette.value)
+})
 </script>
 
 <style lang="scss" scoped>
 @import '../../styles/button.scss';
 .palette {
-	// grid  grid-cols-5
-	@apply mt-4 flex translate-y-0 flex-col gap-5 pt-1 transition-all;
+	@apply flex translate-y-0 flex-col gap-4 pt-1 transition-all;
 
 	.palette-colors {
 		z-index: 1;
@@ -93,6 +126,6 @@ const handleClearPalette = () => {
 
 .palette-hidden {
 	z-index: -1;
-	@apply opacity-0;
+	@apply -mb-2 pt-0 opacity-0;
 }
 </style>
