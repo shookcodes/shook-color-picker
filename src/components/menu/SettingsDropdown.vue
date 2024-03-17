@@ -8,45 +8,54 @@
 			><SettingsSvg name="settings" class="icon"
 		/></Button>
 
-		<ol
+		<div
 			ref="dropdown"
 			aria-hidden="true"
 			class="settings-dropdown transition-all duration-300"
 			:class="showMenu ? 'z-0' : 'pointer-events-none z-10 opacity-0'">
-			<li
-				id="settings-option-hex"
-				class="settings-dropdown-li"
-				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="hex-toggle-checkbox" :checked="formats.hex" name="hex" /><span>Hex</span>
+			<li id="settings-option-hex" class="settings-dropdown-li">
+				<CheckBox
+					id="hex-toggle-checkbox"
+					:selected="formats.hex"
+					name="hex"
+					label="Hex"
+					@set-selected="(value, format) => updateFormats.colorModel({ format, value })" />
 			</li>
-			<li
-				id="settings-option-rgb"
-				class="settings-dropdown-li"
-				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="rgb-toggle-checkbox" :checked="formats.rgb" name="rgb" /><span>RGB</span>
+			<li id="settings-option-rgb" class="settings-dropdown-li">
+				<CheckBox
+					id="rgb-toggle-checkbox"
+					:selected="formats.rgb"
+					name="rgb"
+					label="RGB"
+					@set-selected="(value, format) => updateFormats.colorModel({ format, value })" />
 			</li>
-			<li
-				id="settings-option-hsl"
-				class="settings-dropdown-li"
-				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="hsl-toggle-checkbox" :checked="formats.hsl" name="hsl" /><span>HSL</span>
+			<li id="settings-option-hsl" class="settings-dropdown-li">
+				<CheckBox
+					id="hsl-toggle-checkbox"
+					:selected="formats.hsl"
+					name="hsl"
+					label="HSL"
+					@set-selected="(value, format) => updateFormats.colorModel({ format, value })" />
 			</li>
-			<li
-				id="settings-option-cmyk"
-				class="settings-dropdown-li"
-				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="cmyk-toggle-checkbox" :checked="formats.cmyk" name="cmyk" /><span>CMYK</span>
+			<li id="settings-option-cmyk" class="settings-dropdown-li">
+				<CheckBox
+					id="cmyk-toggle-checkbox"
+					:selected="formats.cmyk"
+					name="cmyk"
+					label="CMYK"
+					@set-selected="(value, format) => updateFormats.colorModel({ format, value })" />
 			</li>
-			<li
-				id="settings-option-palette"
-				class="settings-dropdown-li"
-				@click="(e) => handleSettingToggle(e)">
-				<CheckBox id="palette-toggle-checkbox" :checked="showPalette" name="show-palette" /><span
-					>Show Palette</span
-				>
+
+			<li id="settings-option-palette" class="settings-dropdown-li">
+				<CheckBox
+					id="palette-toggle-checkbox"
+					:selected="showPalette"
+					name="palette"
+					label="Show Palette"
+					@set-selected="(value) => updateShowPalette(value)" />
 			</li>
 			<ThemeToggle />
-		</ol>
+		</div>
 	</div>
 </template>
 <script lang="ts" setup>
@@ -80,7 +89,7 @@ const showMenu = ref(false)
 const toggleButton = ref()
 const dropdown = ref()
 
-const handleToggleClick = (e: MouseEvent) => {
+const handleToggleMenuClick = (e: MouseEvent) => {
 	if (e.target === toggleButton.value) {
 		return
 	} else if (showMenu.value === true) {
@@ -90,27 +99,9 @@ const handleToggleClick = (e: MouseEvent) => {
 	}
 }
 
-const handleSettingToggle = (e: MouseEvent) => {
-	const option = e.currentTarget as HTMLLIElement
-
-	const checkbox = option.querySelector('input[type=checkbox]')
-
-	const id = checkbox?.id.split('-')
-	if (!id) return console.log('No setting found for the option selected.')
-
-	if (id[0] === 'palette') {
-		return updateShowPalette(!showPalette.value)
-	}
-
-	const format = id[0] as ColorFormatOption
-
-	const value = !formats.value[format]
-	updateFormats.colorModel({ format, value })
-}
-
 onMounted(() => {
 	toggleButton.value = document.querySelector('#settings-menu-toggle-button')
-	document.addEventListener('click', (e) => handleToggleClick(e))
+	document.addEventListener('click', (e) => handleToggleMenuClick(e))
 })
 </script>
 
