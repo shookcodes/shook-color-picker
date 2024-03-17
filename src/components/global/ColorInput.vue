@@ -83,7 +83,6 @@ const copyInputValue = async () => {
 </script>
 <style lang="scss" scoped>
 @import '../../styles/typography.scss';
-@import '../../styles/input.scss';
 
 .input-button-wrapper {
 	transition: opacity 0.3s ease-in-out;
@@ -102,6 +101,48 @@ const copyInputValue = async () => {
 .hidden-text-input {
 	& .input-button-wrapper button {
 		@apply scale-y-0;
+	}
+}
+
+input[type='text'] {
+	outline: 1px solid #cccccc;
+}
+
+.color-input {
+	z-index: auto;
+	@apply relative z-0 h-14 transition-all ease-linear;
+
+	& label {
+		caret-color: transparent;
+		z-index: -1;
+		@apply text-sm transition-opacity delay-75 ease-in-out;
+	}
+
+	& input {
+		border-radius: 6px;
+		font-size: 0.95rem;
+		@apply z-10 h-7 w-full origin-top px-1.5 transition-all ease-in-out;
+	}
+
+	&.hidden-text-input {
+		z-index: -1;
+		@apply -mt-14;
+
+		label {
+			@apply opacity-0 delay-0;
+		}
+
+		input {
+			@apply origin-top scale-y-0 opacity-0 transition-all;
+		}
+	}
+}
+
+.theme-dark {
+	input[type='text'] {
+		outline: 1px solid #161616;
+		background: $dark;
+		@apply outline-neutral-600;
 	}
 }
 </style>

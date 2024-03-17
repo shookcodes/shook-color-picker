@@ -56,7 +56,6 @@ watch(formats, () => {
 })
 </script>
 <style lang="scss" scoped>
-@import '../styles/input.scss';
 .color-inputs {
 	gap: 1.75rem;
 	@apply border-top flex flex-col gap-0 overflow-hidden px-[1px] pb-3 pt-1 transition-all ease-in-out;
