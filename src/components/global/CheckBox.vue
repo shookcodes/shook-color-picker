@@ -7,7 +7,8 @@
 				<CheckSvg
 					ref="icon"
 					:id="`icon-${id}`"
-					:class="checked === true ? '' : 'text-transparent'" /></div
+					:class="checked === true ? '' : 'text-transparent'"
+					:style="checkStyle" /></div
 		></span>
 		<span class="checkbox-text">{{ label }}</span>
 	</label>
@@ -42,7 +43,6 @@ const checked = ref(selected)
 
 const handleClick = () => {
 	checked.value = !checked.value
-	console.log('ch', checked.value, name)
 	emit('setSelected', checked.value, name)
 }
 
