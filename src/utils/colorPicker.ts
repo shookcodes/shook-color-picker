@@ -1,7 +1,50 @@
 import { setColorValues } from './colors'
 import type { DrawCanvas, CanvasProps, ColorObject, CursorCoordinates } from '../types'
 
-const getColorAtPosition = (
+import { hslToRgb } from './colors/convertFromHsl'
+
+// Draw the canvas based on it's wrapper's dimensions.
+const setCanvas = ({ canvas, width, height, hue }: DrawCanvas) => {
+	hue = typeof hue === 'string' ? parseInt(hue) : hue
+
+	canvas.width = width
+	canvas.height = height
+
+	setCanvasGradient({ canvas, width, height, hue })
+}
+
+const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
+	const ctx = canvas.getContext('2d')!
+	ctx.imageSmoothingEnabled = true
+
+	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr
+
+	ctx.fillStyle = '#FFFFFF'
+	ctx.fillRect(0, 0, width, height)
+
+	// Offset x values by 4 so that white and hue are are selectable in top right corner of canvas.
+	const colorGradient = ctx.createLinearGradient(4, height, width - 4, height)
+
+	colorGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`)
+
+	// End at 0.97 so default hsl value is selectable in top right of canvas.
+	colorGradient.addColorStop(0.97, `rgba(${r}, ${g}, ${b}, 1)`)
+
+	ctx.fillStyle = colorGradient
+	ctx.fillRect(0, 0, width, height)
+
+	// White to black gradient overlay
+	const lightGradient = ctx.createLinearGradient(0, 0, 0, height * 0.99)
+
+	lightGradient.addColorStop(0, `rgba(0, 0, 0, 0)`)
+	lightGradient.addColorStop(0.1, `rgba(0, 0, 0, 0)`)
+	lightGradient.addColorStop(0.99, `rgba(0, 0, 0, 1)`)
+
+	ctx.fillStyle = lightGradient
+	ctx.fillRect(0, 0, width, height)
+}
+
+const getColorAtCursorPosition = (
 	ctx: CanvasRenderingContext2D,
 	x: number,
 	y: number
@@ -25,43 +68,31 @@ const getColorAtPosition = (
 	return { ...color }
 }
 
-// Draw the canvas based on it's wrapper's dimensions then return the canvas, ctx, and canvas marker values values for use in the ColorPicker.astro file.
-const setCanvas = ({ canvas, width, height, hue }: DrawCanvas) => {
-	hue = typeof hue === 'string' ? parseInt(hue) : hue
+const getColorPositionByHue = (canvas: HTMLCanvasElement, hue: number): string | Error => {
+	const ctx = canvas.getContext('2d')
 
-	// const canvas: HTMLCanvasElement = document.querySelector('canvas')!
+	if (!ctx || !hue) return new Error('Values not provided to get current color at position.')
 
-	canvas.width = width
-	canvas.height = height
+	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr
 
-	const ctx = setCanvasGradient({ canvas, width, height, hue })
+	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+	const data = imageData.data
 
-	return { canvas, ctx }
-}
+	for (let y = 0; y < canvas.height; y++) {
+		for (let x = 0; x < canvas.width; x++) {
+			const offset = (y * canvas.width + x) * 4
+			const r1 = data[offset]
+			const g1 = data[offset + 1]
+			const b1 = data[offset + 2]
 
-const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
-	const ctx = canvas.getContext('2d')!
-	ctx.imageSmoothingEnabled = true
+			if (r1 === r && g1 === g && b1 === b) {
+				console.log('HERE', x, y)
+				return { x, y } //
+			}
+		}
+	}
 
-	// Update canvas color gradient based on the hue param
-	const colorGradient = ctx.createLinearGradient(width * 0.04, height * 0.8, width, height)
-
-	colorGradient.addColorStop(0, `hsla(0, 0%, 100%, 1)`)
-	colorGradient.addColorStop(1, `hsla(${hue}, 100%, 50%, 1)`)
-
-	ctx.fillStyle = colorGradient
-	ctx.fillRect(0, 0, width, height)
-
-	// White to black gradient overlay
-	const lightGradient = ctx.createLinearGradient(0.2, 0.2, 0, height * 0.95)
-
-	lightGradient.addColorStop(0.05, `hsla(0, 0%, 100%, 1)`)
-	lightGradient.addColorStop(1, `hsla(0, 0%, 0%, 1)`)
-
-	ctx.globalCompositeOperation = 'multiply'
-	ctx.fillStyle = lightGradient
-	ctx.fillRect(0, 0, width, height)
-	return ctx
+	return new Error('Color not found')
 }
 
 const getCursorPoint = (
@@ -83,4 +114,10 @@ const getCursorPoint = (
 	return { left, top }
 }
 
-export { setCanvas, setCanvasGradient, getColorAtPosition, getCursorPoint }
+export {
+	setCanvas,
+	setCanvasGradient,
+	getColorAtCursorPosition,
+	getCursorPoint,
+	getColorPositionByHue
+}

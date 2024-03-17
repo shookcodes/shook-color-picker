@@ -17,7 +17,7 @@
 import { onMounted, ref } from 'vue'
 import Tooltip from './Tooltip.vue'
 import ColorMarker from './ColorMarker.vue'
-import { getCursorPoint, getColorAtPosition } from '@utils/colorPicker'
+import { getCursorPoint, getColorAtCursorPosition, getColorPositionByHue } from '@utils/colorPicker'
 import { setColorValues } from '@utils/colors'
 import { setCanvas } from '@/utils/colorPicker'
 import { $sliderValue, setCurrentColor } from '@/store/colors'
@@ -48,11 +48,11 @@ const getValuesFromCursor = (e: MouseEvent, el: HTMLCanvasElement): CursorValues
 
 	const { top, left }: CursorCoordinates = getCursorPoint(canvas.value, x, y) as CursorCoordinates
 
-	const { hex } = getColorAtPosition(ctx, left, top) as ColorObject
+	const color = getColorAtCursorPosition(ctx, left, top) as ColorObject
 
-	if (!hex) return new Error('No color found at position')
+	if (!color.hex) return new Error('No color found at position')
 
-	return { hex, top, left }
+	return { top, left, ...color }
 }
 
 const handleUpdateTooltip = (e: MouseEvent, tooltip: HTMLDivElement) => {
@@ -60,7 +60,7 @@ const handleUpdateTooltip = (e: MouseEvent, tooltip: HTMLDivElement) => {
 	const tooltipText = tooltip.querySelector('.tooltip-color-text')! as HTMLSpanElement
 	const tooltipColor = tooltip.querySelector('.tooltip-color-preview')! as HTMLDivElement
 
-	const { hex, left, top } = getValuesFromCursor(e, canvas.value) as CursorValues
+	const { rgb, hex, left, top } = getValuesFromCursor(e, canvas.value) as CursorValues
 
 	if (!left || !top) {
 		tooltip.style.opacity = '0'
@@ -70,7 +70,7 @@ const handleUpdateTooltip = (e: MouseEvent, tooltip: HTMLDivElement) => {
 	tooltip.style.left = `${left + 10}px`
 	tooltip.style.top = `${top}px`
 
-	tooltipText.innerText = hex
+	tooltipText.innerText = rgb
 
 	tooltipColor.style.background = hex
 }
@@ -99,7 +99,6 @@ const handleCanvasClick = (e: MouseEvent) => {
 }
 
 onMounted(() => {
-	// wrapper.value = canvas.value.parentElement
 	ctx.value = canvas.value.getContext('2d')
 
 	setCanvas({
@@ -108,6 +107,8 @@ onMounted(() => {
 		height: wrapper.value.clientHeight,
 		hue: sliderValue.value
 	})
+
+	getColorPositionByHue(canvas.value, sliderValue.value)
 })
 </script>
 <style lang="scss" scoped>
