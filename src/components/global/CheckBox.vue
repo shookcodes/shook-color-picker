@@ -1,13 +1,15 @@
 <template>
 	<label :class="className" class="checkbox-input-label" @input="handleClick">
 		<!-- @mouseover="handleMouseOver(hoverCallback)" -->
-		<span class="checkbox" :style="checkboxStyle">
-			<input :id="id" type="checkbox" ref="checkboxEl" />
+		<span class="checkbox" :style="checkboxStyle" role="checkbox">
+			<input :id="id" type="checkbox" ref="checkboxEl" :aria-checked="checked ? true : false" />
 			<div class="checkmark">
 				<CheckSvg
 					ref="icon"
 					:id="`icon-${id}`"
-					:class="checked === true ? '' : 'text-transparent'" /></div
+					class="transition-transform"
+					:class="checked === true ? '' : 'scale-0'"
+					:style="checkStyle" /></div
 		></span>
 		<span class="checkbox-text">{{ label }}</span>
 	</label>
@@ -42,7 +44,6 @@ const checked = ref(selected)
 
 const handleClick = () => {
 	checked.value = !checked.value
-	console.log('ch', checked.value, name)
 	emit('setSelected', checked.value, name)
 }
 

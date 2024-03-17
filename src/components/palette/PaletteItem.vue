@@ -2,12 +2,11 @@
 	<CheckBox
 		:id="id"
 		:name="color.hex"
-		:value="color.hex"
-		@click="handleCheck"
-		:checkStyle="checkStyle"
-		:labelStyle="{ background: color.hex }"
-		className="checkbox-palette z-10"
-		:checked="isChecked" />
+		@set-selected="(value) => updateSelectedPaletteItem(value)"
+		:checkMarkStyle="checkStyle"
+		className="palette-checkbox z-10"
+		:selected="checked"
+		:checkboxStyle="{ background: color.hex }" />
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -28,24 +27,22 @@ const emit = defineEmits<Emits>()
 
 const isChecked = ref(false)
 
-const handleCheck = () => {
-	isChecked.value = !isChecked.value
+const checked = computed(() => isChecked.value)
+
+const updateSelectedPaletteItem = (value) => {
+	isChecked.value = value
 
 	const { hex, rgb, hsl, cmyk } = color
 
-	emit('click', { hex, rgb, hsl, cmyk })
+	emit('click', { ...color })
 }
 
 const checkStyle = computed(() => {
 	const { hex } = color
 
-	const fill =
-		isChecked.value === true ? Object.values(getLightDarkValues({ hex }))[0] : 'transparent'
+	const fill = Object.values(getLightDarkValues({ hex }))[0]
 
-	const stroke =
-		isChecked.value === true
-			? Object.values(getLightDarkValues({ hex, invert: true }))[0]
-			: 'transparent'
+	const stroke = Object.values(getLightDarkValues({ hex, invert: true }))[0]
 
 	return {
 		color: fill,

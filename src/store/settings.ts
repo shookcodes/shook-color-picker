@@ -55,7 +55,6 @@ export const updateFormats = {
 
 export const updateShowPalette = (value: boolean) => {
 	$showPalette.set(value)
-	console.log('STA', $showPalette.get())
 }
 
 export const setTheme = (value: ColorPickerThemeOption) => {
