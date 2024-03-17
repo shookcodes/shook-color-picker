@@ -13,7 +13,10 @@ export const $currentColor = persistentAtom<ColorObject>(
 	}
 )
 
-export const $selectedColors = atom<ColorObject[]>([])
+export const $selectedColors = persistentAtom<ColorObject[]>('shookSelectedColors', [], {
+	encode: JSON.stringify,
+	decode: JSON.parse
+})
 
 export const updateSelectedColors = {
 	add: (color: ColorObject) => {
@@ -23,7 +26,7 @@ export const updateSelectedColors = {
 
 		if (found) return new Error(`Color with hex ${color.hex} already selected.`)
 
-		$selectedColors.set([...arr, color])
+		return $selectedColors.set([...arr, color])
 	},
 	remove: (color: ColorObject) => {
 		const arr = $selectedColors.get()
@@ -35,7 +38,7 @@ export const updateSelectedColors = {
 		const index = arr.indexOf(found)
 		arr.splice(index, 1)
 
-		$selectedColors.set([...arr])
+		return $selectedColors.set([...arr])
 	}
 }
 
@@ -68,8 +71,22 @@ export const updatePalette = {
 
 		$colorPalette.set([...palette, $currentColor.get()])
 	},
+	delete: (colors: ColorObject[]) => {
+		const palette = $colorPalette.get()
 
+		const arr = palette.filter((color) => {
+			const found = colors.find(({ hex }) => color.hex === hex)
+
+			if (!found) return color
+		})
+
+		$colorPalette.set([...arr])
+
+		return $colorPalette.get()
+	},
 	deleteAll: () => {
 		$colorPalette.set([])
 	}
 }
+
+window.addEventListener('load', $selectedColors.set([]))

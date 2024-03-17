@@ -2,16 +2,16 @@
 	<div class="palette" ref="paletteRef">
 		<span class="palette-title">Palette</span>
 		<div class="palette-colors">
-			<div v-for="(color, index) in paletteItems">
-				<PaletteItem :color="color" :key="index" :id="color.hex.split('#')[1]" />
+			<div v-for="(color, index) in palette">
+				<PaletteItem :color="color" :key="color" :id="color.hex.split('#')[1]" />
 			</div>
 		</div>
 		<div class="palette-actions">
 			<Button
 				className="button-palette-action clear-palette"
 				ariaLabel="clear palette colors"
-				@click="selectedColors.length > 0 ? handleRemoveSelected : handleClearPalette"
-				>{{ selectedColors.length > 0 ? 'Remove Selected' : 'Clear Palette' }}</Button
+				@click="selectedArr.length > 0 ? handleRemoveSelected() : handleClearPalette()"
+				>{{ selectedArr.length > 0 ? 'Remove Selected' : 'Clear Palette' }}</Button
 			>
 			<!-- <Button className="button-palette-action save-palette" ariaLabel="save palette colors"
 				>Save Palette</Button
@@ -33,7 +33,8 @@ const palette = useStore($colorPalette)
 const showPalette = useStore($showPalette)
 const selectedColors = useStore($selectedColors)
 
-const paletteItems = computed(() => palette.value)
+const selectedArr = computed(() => selectedColors.value)
+const paletteItems = ref(palette.value)
 
 const paletteHeight = ref()
 const paletteRef = ref()
@@ -82,6 +83,10 @@ const handleClearPalette = () => {
 	setTimeout(() => {
 		updatePalette.deleteAll()
 	}, 200)
+}
+
+const handleRemoveSelected = () => {
+	updatePalette.delete(selectedColors.value)
 }
 
 onMounted(() => {

@@ -30,16 +30,7 @@ const isChecked = ref(false)
 
 const checked = computed(() => isChecked.value)
 
-const updateSelectedPaletteItem = (value) => {
-	isChecked.value = value
-
-	const { hex, rgb, hsl, cmyk } = color
-
-	isChecked.value === true
-		? updateSelectedColors.add({ ...color })
-		: updateSelectedColors.remove({ ...color })
-}
-
+// Set paletteItem checkmark fill and stroke colors based on the item's background color (light check for dark colors/dark check for light colors).
 const checkStyle = computed(() => {
 	const { hex } = color
 
@@ -55,4 +46,16 @@ const checkStyle = computed(() => {
 		paintOrder: 'stroke'
 	}
 })
+
+const updateSelectedPaletteItem = (value) => {
+	isChecked.value = value
+
+	const { hex, rgb, hsl, cmyk } = color
+
+	if (isChecked.value === true) {
+		updateSelectedColors.add({ ...color })
+	} else {
+		updateSelectedColors.remove({ ...color })
+	}
+}
 </script>
