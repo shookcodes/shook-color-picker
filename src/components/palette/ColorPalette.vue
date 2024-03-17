@@ -10,8 +10,8 @@
 			<Button
 				className="button-palette-action clear-palette"
 				ariaLabel="clear palette colors"
-				@click="selectedArr.length > 0 ? handleRemoveSelected() : handleClearPalette()"
-				>{{ selectedArr.length > 0 ? 'Remove Selected' : 'Clear Palette' }}</Button
+				@click="selectedColors.length > 0 ? handleRemoveSelected() : handleClearPalette()"
+				>{{ selectedColors.length > 0 ? 'Remove Selected' : 'Clear Palette' }}</Button
 			>
 			<!-- <Button className="button-palette-action save-palette" ariaLabel="save palette colors"
 				>Save Palette</Button
@@ -33,7 +33,8 @@ const palette = useStore($colorPalette)
 const showPalette = useStore($showPalette)
 const selectedColors = useStore($selectedColors)
 
-const selectedArr = computed(() => selectedColors.value)
+const selectedArr = ref([])
+
 const paletteItems = ref(palette.value)
 
 const paletteHeight = ref()
@@ -87,11 +88,12 @@ const handleClearPalette = () => {
 
 const handleRemoveSelected = () => {
 	updatePalette.delete(selectedColors.value)
+	selectedArr.value = selectedColors.value
 }
 
 onMounted(() => {
 	paletteHeight.value = getPaletteHeight()
-
+	selectedArr.value = selectedColors.value
 	if (palette.value.length === 0) {
 		return setPaletteVisibility(false)
 	}

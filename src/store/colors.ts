@@ -38,7 +38,7 @@ export const updateSelectedColors = {
 		const index = arr.indexOf(found)
 		arr.splice(index, 1)
 
-		return $selectedColors.set([...arr])
+		$selectedColors.set([...arr])
 	}
 }
 
@@ -81,8 +81,7 @@ export const updatePalette = {
 		})
 
 		$colorPalette.set([...arr])
-
-		return $colorPalette.get()
+		$selectedColors.set([])
 	},
 	deleteAll: () => {
 		$colorPalette.set([])
