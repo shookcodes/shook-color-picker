@@ -2,20 +2,16 @@
 	<div class="palette" ref="paletteRef">
 		<span class="palette-title">Palette</span>
 		<div class="palette-colors">
-			<div v-for="(color, index) in palette">
-				<PaletteItem
-					:color="color"
-					:key="index"
-					:id="color.hex.split('#')[1]"
-					@click="(value: ColorObject) => updateSelectedColors(value)" />
+			<div v-for="(color, index) in paletteItems">
+				<PaletteItem :color="color" :key="index" :id="color.hex.split('#')[1]" />
 			</div>
 		</div>
 		<div class="palette-actions">
 			<Button
 				className="button-palette-action clear-palette"
 				ariaLabel="clear palette colors"
-				@click="handleClearPalette"
-				>Clear Palette</Button
+				@click="selectedColors.length > 0 ? handleRemoveSelected : handleClearPalette"
+				>{{ selectedColors.length > 0 ? 'Remove Selected' : 'Clear Palette' }}</Button
 			>
 			<!-- <Button className="button-palette-action save-palette" ariaLabel="save palette colors"
 				>Save Palette</Button
@@ -24,10 +20,10 @@
 	</div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import PaletteItem from './PaletteItem.vue'
 import Button from '@global/Button.vue'
-import { $colorPalette, updatePalette } from '@store/colors'
+import { $colorPalette, updatePalette, $selectedColors } from '@store/colors'
 import { $showPalette } from '@store/settings'
 import { useStore } from '@nanostores/vue'
 import type { ColorObject } from '@/types'
@@ -35,6 +31,9 @@ import { watch } from 'vue'
 
 const palette = useStore($colorPalette)
 const showPalette = useStore($showPalette)
+const selectedColors = useStore($selectedColors)
+
+const paletteItems = computed(() => palette.value)
 
 const paletteHeight = ref()
 const paletteRef = ref()
@@ -78,21 +77,6 @@ watch(showPalette, (bool) => {
 	}
 	setPaletteVisibility(bool)
 })
-
-const selected: ColorObject[] = []
-
-const updateSelectedColors = (color: ColorObject) => {
-	const found = selected.findIndex((match: ColorObject) => match?.hex === color.hex)
-
-	if (found === -1) {
-		selected.push(color)
-		return selected
-	}
-
-	selected.splice(found, 1)
-
-	return selected
-}
 
 const handleClearPalette = () => {
 	setTimeout(() => {

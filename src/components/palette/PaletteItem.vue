@@ -13,6 +13,7 @@ import { ref, computed } from 'vue'
 import { getLightDarkValues } from '@utils/colors'
 import type { ColorObject } from '../../types'
 import CheckBox from '@global/CheckBox.vue'
+import { updateSelectedColors } from '@store/colors'
 interface Props {
 	color: ColorObject
 	id: string
@@ -34,7 +35,9 @@ const updateSelectedPaletteItem = (value) => {
 
 	const { hex, rgb, hsl, cmyk } = color
 
-	emit('click', { ...color })
+	isChecked.value === true
+		? updateSelectedColors.add({ ...color })
+		: updateSelectedColors.remove({ ...color })
 }
 
 const checkStyle = computed(() => {

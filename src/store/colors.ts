@@ -1,5 +1,5 @@
 import { persistentAtom } from '@nanostores/persistent'
-
+import { atom } from 'nanostores'
 export const locale = persistentAtom('locale', 'en')
 
 import type { ColorObject } from '../types'
@@ -12,6 +12,32 @@ export const $currentColor = persistentAtom<ColorObject>(
 		decode: JSON.parse
 	}
 )
+
+export const $selectedColors = atom<ColorObject[]>([])
+
+export const updateSelectedColors = {
+	add: (color: ColorObject) => {
+		const arr = [...$selectedColors.get()]
+
+		const found = arr.find(({ hex }) => color.hex === hex)
+
+		if (found) return new Error(`Color with hex ${color.hex} already selected.`)
+
+		$selectedColors.set([...arr, color])
+	},
+	remove: (color: ColorObject) => {
+		const arr = $selectedColors.get()
+
+		const found = arr.find(({ hex }) => color.hex === hex)
+
+		if (!found) return new Error(`Color with ${color.hex} not found for removal.`)
+
+		const index = arr.indexOf(found)
+		arr.splice(index, 1)
+
+		$selectedColors.set([...arr])
+	}
+}
 
 export const setCurrentColor = (color: ColorObject): void => {
 	return $currentColor.set({ ...color })
