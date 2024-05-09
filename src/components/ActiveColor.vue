@@ -101,7 +101,7 @@ const addColorToPalette = () => {
 }
 
 .active-color-preview {
-	@apply h-8 w-full flex-1 rounded-md border-2 border-neutral-100  shadow-md transition-all ease-in-out;
+	@apply h-8 w-full flex-1 rounded-md border border-[#cccccc] transition-all ease-in-out;
 }
 
 .theme-dark {
