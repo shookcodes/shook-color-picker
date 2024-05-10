@@ -1,7 +1,14 @@
 import { setColorValues } from './colors'
-import type { DrawCanvas, CanvasProps, ColorObject, CursorCoordinates } from '../types'
+import type {
+	DrawCanvas,
+	CanvasProps,
+	ColorObject,
+	CursorCoordinates,
+	CanvasCoordinates
+} from '../types'
 
 import { hslToRgb } from './colors/convertFromHsl'
+import type { RGBArray } from './colors/types'
 
 // Draw the canvas based on it's wrapper's dimensions.
 const setCanvas = ({ canvas, width, height, hue }: DrawCanvas) => {
@@ -17,7 +24,7 @@ const setCanvasGradient = ({ canvas, width, height, hue }: CanvasProps) => {
 	const ctx = canvas.getContext('2d')!
 	ctx.imageSmoothingEnabled = true
 
-	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr
+	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr as RGBArray
 
 	ctx.fillStyle = '#FFFFFF'
 	ctx.fillRect(0, 0, width, height)
@@ -68,12 +75,15 @@ const getColorAtCursorPosition = (
 	return { ...color }
 }
 
-const getColorPositionByHue = (canvas: HTMLCanvasElement, hue: number): string | Error => {
+const getColorPositionByHue = (
+	canvas: HTMLCanvasElement,
+	hue: number
+): CanvasCoordinates | Error => {
 	const ctx = canvas.getContext('2d')
 
 	if (!ctx || !hue) return new Error('Values not provided to get current color at position.')
 
-	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr
+	const [r, g, b] = hslToRgb(hue as number, 100, 50).arr as RGBArray
 
 	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 	const data = imageData.data
@@ -86,7 +96,6 @@ const getColorPositionByHue = (canvas: HTMLCanvasElement, hue: number): string |
 			const b1 = data[offset + 2]
 
 			if (r1 === r && g1 === g && b1 === b) {
-				console.log('HERE', x, y)
 				return { x, y } //
 			}
 		}

@@ -1,5 +1,4 @@
 import { persistentAtom } from '@nanostores/persistent'
-import { atom } from 'nanostores'
 export const locale = persistentAtom('locale', 'en')
 
 import type { ColorObject } from '../types'
@@ -88,4 +87,4 @@ export const updatePalette = {
 	}
 }
 
-window.addEventListener('load', $selectedColors.set([]))
+window.addEventListener('load', () => $selectedColors.set([]))
